@@ -14,7 +14,6 @@ struct ResultView: View {
     @EnvironmentObject private var model: AnimeViewModel
     @EnvironmentObject private var globalViewModel: GlobalViewModel
     
-    @State private var showComparison = false
     @State private var showShareSheet = false
     @State private var confettiTrigger = 0
     @State private var rippleCounter = 0
@@ -139,16 +138,7 @@ struct ResultView: View {
                         else if let processedImage = model.processedImage {
                             ZStack {
                                 // Image content
-                                if showComparison, let originalImage = model.selectedImage {
-                                    ComparisonView(
-                                        originalImage: originalImage,
-                                        processedImage: processedImage
-                                    )
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: 400)
-                                    .cornerRadius(16)
-                                    .shadow(radius: 10, x: 0, y: 5)
-                                } else {
+                              
                                     Image(uiImage: processedImage)
                                         .resizable()
                                         .cornerRadius(16)
@@ -160,7 +150,6 @@ struct ResultView: View {
                                         .frame(maxWidth: .infinity)
                                         .frame(maxHeight: 400)
                                         .shadow(radius: 10, x: 0, y: 5)
-                                }
                             }
                             .confettiCannon(
                                 trigger: $confettiTrigger,
@@ -198,27 +187,6 @@ struct ResultView: View {
                                         .stroke(Color.white.opacity(0.3), lineWidth: 1)
                                 )
                                 .foregroundColor(.white)
-                            
-                            // Toggle comparison button
-                            Button {
-                                withAnimation {
-                                    showComparison.toggle()
-                                }
-                            } label: {
-                                HStack {
-                                    Image(systemName: showComparison ? "rectangle.fill" : "rectangle.on.rectangle")
-                                        .font(.system(size: 18))
-                                    Text(showComparison ? "Show Anime" : "Compare Original")
-                                        .font(.system(.body, design: .rounded, weight: .medium))
-                                }
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(
-                                    RoundedRectangle(cornerRadius: 16)
-                                        .fill(.ultraThinMaterial)
-                                )
-                                .foregroundColor(.white)
-                            }
                             
                             // Action buttons
                             HStack(spacing: 15) {
@@ -267,11 +235,11 @@ struct ResultView: View {
                         // Error State
                         else if let errorMessage = model.errorMessage {
                             VStack(spacing: 20) {
-                                Image(systemName: "exclamationmark.triangle.fill")
+                                Image(systemName: "xmark.circle.fill")
                                     .font(.system(size: 60))
-                                    .foregroundColor(.yellow)
+                                    .foregroundColor(.red)
                                 
-                                Text("Transformation Failed")
+                                Text("Something Went Wrong")
                                     .font(.system(.title2, design: .rounded, weight: .bold))
                                     .foregroundColor(.white)
                                 
@@ -281,35 +249,63 @@ struct ResultView: View {
                                     .foregroundColor(.white.opacity(0.8))
                                     .padding(.horizontal)
                                 
-                                Button {
-                                    if retryCount < 3 {
-                                        retryCount += 1
-                                        
-                                        if let image = model.selectedImage {
-                                            model.processImage(image, style: model.selectedStyle)
+                                HStack(spacing: 16) {
+                                    Button {
+                                        if retryCount < 3 {
+                                            retryCount += 1
+                                            
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                                if !globalViewModel.isPro {
+                                                    globalViewModel.isShowingPayWall = true
+                                                }
+                                            }
+                                            
+                                            if let image = model.selectedImage {
+                                                model.processImage(image, style: model.selectedStyle)
+                                            }
                                         }
+                                    } label: {
+                                        HStack {
+                                            Image(systemName: "arrow.clockwise")
+                                            Text(retryCount >= 3 ? "Retry Limit Reached" : "Try Again")
+                                        }
+                                        .font(.system(.body, design: .rounded, weight: .medium))
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 16)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 25)
+                                                .fill(retryCount >= 3 ? Color.gray : Color.purple)
+                                        )
+                                        .foregroundColor(.white)
                                     }
-                                } label: {
-                                    HStack {
-                                        Image(systemName: "arrow.clockwise")
-                                        Text(retryCount >= 3 ? "Retry Limit Reached" : "Retry")
+                                    .disabled(retryCount >= 3)
+                                    
+                                    Button {
+                                        model.clearImages()
+                                        presentationMode.wrappedValue.dismiss()
+                                    } label: {
+                                        HStack {
+                                            Image(systemName: "arrow.triangle.2.circlepath")
+                                            Text("Reset")
+                                        }
+                                        .font(.system(.body, design: .rounded, weight: .medium))
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 16)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 25)
+                                                .fill(Color.gray.opacity(0.3))
+                                        )
+                                        .foregroundColor(.white)
                                     }
-                                    .font(.system(.headline, design: .rounded))
-                                    .padding(.horizontal, 40)
-                                    .padding(.vertical, 12)
-                                    .background(retryCount >= 3 ? Color.gray : Color.accentColor)
-                                    .cornerRadius(20)
-                                    .foregroundColor(.white)
                                 }
-                                .disabled(retryCount >= 3)
-                                .padding(.top, 10)
                             }
-                            .padding()
+                            .padding(24)
+                            .frame(maxWidth: .infinity)
                             .background(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .fill(.ultraThinMaterial)
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(Color.black.opacity(0.95))
                             )
-                            .cornerRadius(20)
+                            .padding()
                         }
                         // No image state
                         else {
@@ -367,109 +363,6 @@ struct ResultView: View {
 }
 
 
-
-struct ComparisonView: View {
-    let originalImage: UIImage
-    let processedImage: UIImage
-    
-    @State private var sliderPosition: CGFloat = 0.5
-    
-    var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                // Container for both images
-                ZStack(alignment: .leading) {
-                    // Original image (full width, visible on left side)
-                    Image(uiImage: originalImage)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: geometry.size.width, height: geometry.size.height)
-                        .clipped()
-                    
-                    // Processed image (masked to show only right side)
-                    Image(uiImage: processedImage)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: geometry.size.width, height: geometry.size.height)
-                        .clipped()
-                        .mask(
-                            HStack(spacing: 0) {
-                                Rectangle()
-                                    .frame(width: geometry.size.width * sliderPosition)
-                                    .opacity(0) // Make left side transparent
-                                Rectangle()
-                                    .frame(width: geometry.size.width * (1 - sliderPosition))
-                            }
-                        )
-                }
-                
-                // Divider line
-                Rectangle()
-                    .fill(Color.white)
-                    .frame(width: 2, height: geometry.size.height)
-                    .position(x: geometry.size.width * sliderPosition, y: geometry.size.height / 2)
-                
-                // Slider handle
-                Circle()
-                    .fill(Color.white)
-                    .frame(width: 28, height: 28)
-                    .shadow(radius: 2)
-                    .overlay(
-                        HStack(spacing: 0) {
-                            Image(systemName: "arrow.left")
-                                .font(.system(size: 10, weight: .bold))
-                            Image(systemName: "arrow.right")
-                                .font(.system(size: 10, weight: .bold))
-                        }
-                            .foregroundColor(.accentColor)
-                    )
-                    .position(x: geometry.size.width * sliderPosition, y: geometry.size.height / 2)
-                
-                // Labels
-                VStack {
-                    HStack {
-                        // Original label
-                        Text("Anime")
-                            .font(.system(.subheadline, design: .rounded, weight: .bold))
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(Color.black.opacity(0.7))
-                            .foregroundColor(.white)
-                            .cornerRadius(16)
-                            .offset(x: geometry.size.width * 0.25 - 35)
-                        
-                        Spacer()
-                        
-                        // Processed label
-                        Text("Original")
-                            .font(.system(.subheadline, design: .rounded, weight: .bold))
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(Color.black.opacity(0.7))
-                            .foregroundColor(.white)
-                            .cornerRadius(16)
-                            .offset(x: -geometry.size.width * 0.25 + 40)
-                    }
-                    .frame(width: geometry.size.width)
-                    .padding(.top, 20)
-                    
-                    Spacer()
-                }
-                
-                // Gesture area
-                Color.clear
-                    .contentShape(Rectangle())
-                    .gesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { value in
-                                let newPosition = value.location.x / geometry.size.width
-                                sliderPosition = min(max(newPosition, 0), 1)
-                            }
-                    )
-            }
-        }
-    }
-}
 
 struct ActionButton: View {
     let title: String

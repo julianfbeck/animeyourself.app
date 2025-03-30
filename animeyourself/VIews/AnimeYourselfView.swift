@@ -120,87 +120,9 @@ struct AnimeYourselfView: View {
                             EmptyView()
                         }
                         
-                        if let errorMessage = model.errorMessage {
-                            VStack(spacing: 16) {
-                                Text(errorMessage)
-                                    .font(.system(.subheadline, design: .rounded))
-                                    .foregroundColor(.red)
-                                    .multilineTextAlignment(.center)
-                                
-                                HStack(spacing: 16) {
-                                    Button {
-                                        if let image = model.selectedImage {
-                                            model.processImage(image, style: model.selectedStyle)
-                                        }
-                                    } label: {
-                                        HStack {
-                                            Image(systemName: "arrow.clockwise")
-                                            Text("Retry")
-                                        }
-                                        .font(.system(.subheadline, design: .rounded, weight: .medium))
-                                        .foregroundColor(.white)
-                                        .padding(.horizontal, 16)
-                                        .padding(.vertical, 8)
-                                        .background(
-                                            RoundedRectangle(cornerRadius: 12)
-                                                .fill(Color.accentColor)
-                                        )
-                                    }
-                                    .disabled(model.selectedImage == nil)
-                                    .opacity(model.selectedImage == nil ? 0.5 : 1)
-                                    
-                                    Button {
-                                        model.clearImages()
-                                        photoPickerItem = nil
-                                    } label: {
-                                        HStack {
-                                            Image(systemName: "arrow.triangle.2.circlepath")
-                                            Text("Reset")
-                                        }
-                                        .font(.system(.body, design: .rounded, weight: .medium))
-                                        .frame(maxWidth: .infinity)
-                                        .padding(.vertical, 16)
-                                        .background(
-                                            RoundedRectangle(cornerRadius: 25)
-                                                .fill(Color.gray.opacity(0.3))
-                                        )
-                                        .foregroundColor(.white)
-                                    }
-                                }
-                            }
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .fill(Color.black.opacity(0.5))
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 16)
-                                            .fill(.ultraThinMaterial)
-                                    )
-                            )
-                            .shadow(radius: 8, x: 0, y: 4)
-                        }
+                    
                         
-                        // Add reset button when an image is selected but no error or result is shown
-//                        if model.selectedImage != nil && !model.isProcessing && model.errorMessage == nil && model.processedImage == nil {
-//                            Button {
-//                                model.clearImages()
-//                                photoPickerItem = nil
-//                            } label: {
-//                                HStack {
-//                                    Image(systemName: "arrow.triangle.2.circlepath")
-//                                    Text("Reset")
-//                                }
-//                                .font(.system(.subheadline, design: .rounded, weight: .medium))
-//                                .foregroundColor(.white)
-//                                .padding(.horizontal, 16)
-//                                .padding(.vertical, 8)
-//                                .background(
-//                                    RoundedRectangle(cornerRadius: 12)
-//                                        .fill(Color.gray.opacity(0.6))
-//                                )
-//                            }
-//                            .padding(.top, 8)
-//                        }
+
                         
                         Spacer()
                     }
@@ -286,68 +208,91 @@ struct AnimeYourselfView: View {
                     .font(.system(.headline, design: .rounded))
                     .foregroundColor(.white.opacity(0.9))
                 
-                if model.errorMessage != nil {
-                    errorView
-                } else {
-                    // Show anime style selection
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Choose Anime Style:")
-                            .font(.system(.headline, design: .rounded))
-                            .foregroundColor(.white.opacity(0.9))
-                        
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 12) {
-                                ForEach(animeStyles, id: \.self) { style in
-                                    animeStyleButton(style)
-                                }
-                            }
-                            .padding(.horizontal, 4)
-                            .padding(.vertical, 8)
-                        }
-                    }
-                    .padding(.top, 8)
+                // Show anime style selection
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Choose Anime Style:")
+                        .font(.system(.headline, design: .rounded))
+                        .foregroundColor(.white.opacity(0.9))
                     
-                    // Transform button
-                    Button {
-                        if !self.globalViewModel.isPro && globalViewModel.remainingUses <= 0 {
-                           self.globalViewModel.isShowingPayWall = true
-                            return
-                        }
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                            if !globalViewModel.isPro {
-                                globalViewModel.isShowingPayWall = true
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 12) {
+                            ForEach(animeStyles, id: \.self) { style in
+                                animeStyleButton(style)
                             }
                         }
-                            
-                        if let image = model.selectedImage {
-                            model.processImage(image, style: model.selectedStyle)
-                            globalViewModel.useFeature()
-                            model.navigateToResult = true
-                            
-                            // Reset photoPickerItem after a slight delay
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                photoPickerItem = nil
-                            }
-                        }
-                    } label: {
-                        HStack(spacing: 10) {
-                            Image(systemName: globalViewModel.remainingUses > 0 || globalViewModel.isPro ? "wand.and.stars":"checkmark.seal")
-                                .font(.system(size: 18))
-                            Text(globalViewModel.remainingUses > 0 || globalViewModel.isPro ? "Transform to Anime" : "Unlimited Access")
-                                .font(.system(.body, design: .rounded, weight: .medium))
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(
-                            RoundedRectangle(cornerRadius: 25)
-                                .fill(Color.accentColor)
-                        )
-                        .foregroundColor(.white)
+                        .padding(.horizontal, 4)
+                        .padding(.vertical, 8)
                     }
-                    .shadow(radius: 4, x: 0, y: 2)
-                    .padding(.top, 12)
                 }
+                .padding(.top, 8)
+                
+                // Transform button
+                Button {
+                    if !self.globalViewModel.isPro && globalViewModel.remainingUses <= 0 {
+                       self.globalViewModel.isShowingPayWall = true
+                        return
+                    }
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        if !globalViewModel.isPro {
+                            globalViewModel.isShowingPayWall = true
+                        }
+                    }
+                        
+                    if let image = model.selectedImage {
+                        model.processImage(image, style: model.selectedStyle)
+                        globalViewModel.useFeature()
+                        model.navigateToResult = true
+                        
+                        // Reset photoPickerItem after a slight delay
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            photoPickerItem = nil
+                        }
+                    }
+                } label: {
+                    HStack(spacing: 10) {
+                        Image(systemName: globalViewModel.remainingUses > 0 || globalViewModel.isPro ? "wand.and.stars":"checkmark.seal")
+                            .font(.system(size: 18))
+                        Text(globalViewModel.remainingUses > 0 || globalViewModel.isPro ? "Transform to Anime" : "Unlimited Access")
+                            .font(.system(.body, design: .rounded, weight: .medium))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 25)
+                            .fill(Color.accentColor)
+                    )
+                    .foregroundColor(.white)
+                }
+                .shadow(radius: 4, x: 0, y: 2)
+                .padding(.top, 12)
+                
+                // New Image button
+                Button {
+                    model.clearImages()
+                    photoPickerItem = nil
+                    showImagePicker = true
+                } label: {
+                    HStack(spacing: 10) {
+                        Image(systemName: "photo.stack")
+                            .font(.system(size: 18))
+                        Text("New Image")
+                            .font(.system(.body, design: .rounded, weight: .medium))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 25)
+                            .fill(Color.black.opacity(0.4))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 25)
+                                    .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                            )
+                    )
+                    .foregroundColor(.white)
+                }
+                .shadow(radius: 4, x: 0, y: 2)
+                .padding(.top, 8)
             } else {
                 VStack(spacing: 20) {
                     selectImageButton
@@ -580,78 +525,7 @@ struct AnimeYourselfView: View {
         .background(errorBackgroundStyle)
     }
     
-    private var errorView: some View {
-        VStack(spacing: 24) {
-            // Error icon and heading
-            VStack(spacing: 16) {
-                Image(systemName: "xmark.circle.fill")
-                    .font(.system(size: 64))
-                    .foregroundColor(.red)
-                
-                Text("Something Went Wrong")
-                    .font(.system(.title2, design: .rounded, weight: .bold))
-                    .foregroundColor(.white)
-                
-                Text("Failed to transform image: cancelled")
-                    .font(.system(.body, design: .rounded))
-                    .foregroundColor(.white.opacity(0.9))
-                    .multilineTextAlignment(.center)
-            }
-            
-            // Action buttons
-            HStack(spacing: 16) {
-                Button {
-                    // retry is always free
-                    if let image = model.selectedImage {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                            if !globalViewModel.isPro  {
-                                globalViewModel.isShowingPayWall = true
-                            }
-                        }
-                        
-                        model.processImage(image, style: model.selectedStyle)
-                    }
-                } label: {
-                    HStack {
-                        Image(systemName: "arrow.clockwise")
-                        Text("Try Again")
-                    }
-                    .font(.system(.body, design: .rounded, weight: .medium))
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 25)
-                            .fill(Color.purple)
-                    )
-                    .foregroundColor(.white)
-                }
-                
-                Button {
-                    model.clearImages()
-                    photoPickerItem = nil
-                } label: {
-                    HStack {
-                        Image(systemName: "arrow.triangle.2.circlepath")
-                        Text("Reset")
-                    }
-                    .font(.system(.body, design: .rounded, weight: .medium))
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 25)
-                            .fill(Color.gray.opacity(0.3))
-                    )
-                    .foregroundColor(.white)
-                }
-            }
-        }
-        .padding(24)
-        .frame(maxWidth: .infinity)
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color.black.opacity(0.95))
-        )
-    }
+    
     
     private var errorBackgroundStyle: some View {
         RoundedRectangle(cornerRadius: 16)
