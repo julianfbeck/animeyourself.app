@@ -12,7 +12,7 @@ interface QueueMessage {
 export interface Env {
 	// Define the R2 bucket binding
 	IMAGES: R2Bucket;
-	// Define any other necessary bindings (e.g., AI service, output storage, etc.)
+	// OpenAI API key for image analysis
 	OPENAI_API_KEY: string;
 }
 
@@ -66,7 +66,7 @@ export async function processQueue(batch: MessageBatch<QueueMessage>, env: Env):
 			// });
 
 			console.log(`Processed request ${message.body.requestId}`);
-			console.log(imageData.byteLength);
+			console.log(`Image size: ${imageData.byteLength} bytes`);
 
 			// Acknowledge the message after successful processing
 			message.ack();
