@@ -11,6 +11,8 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
+import { processQueue } from './consumer';
+
 /**
  * Cloudflare Worker that accepts image processing requests and puts them into a queue named "gemini"
  * for asynchronous processing.
@@ -48,6 +50,7 @@ export interface Env {
 }
 
 export default {
+	// HTTP request handler
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
 		// Generate a unique ID for this request
 		const requestId = crypto.randomUUID();
@@ -193,5 +196,10 @@ export default {
 				status: 500
 			});
 		}
+	},
+
+	// Queue message handler
+	async queue(batch: MessageBatch<QueueMessage>, env: Env): Promise<void> {
+		return processQueue(batch, env);
 	}
 };
