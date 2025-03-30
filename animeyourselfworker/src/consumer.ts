@@ -13,10 +13,12 @@ export interface Env {
 	// Define the R2 bucket binding
 	IMAGES: R2Bucket;
 	// Define any other necessary bindings (e.g., AI service, output storage, etc.)
+	OPENAI_API_KEY: string;
 }
 
-// Import the promptGenerator
+// Import the promptGenerator and OpenAI service
 import { generatePrompt } from './promptGenerator';
+import { createOpenAIService } from './openaiService';
 
 export async function processQueue(batch: MessageBatch<QueueMessage>, env: Env): Promise<void> {
 	// Process each message in the batch
@@ -35,10 +37,16 @@ export async function processQueue(batch: MessageBatch<QueueMessage>, env: Env):
 			// Get the image data as an ArrayBuffer
 			const imageData = await imageObject.arrayBuffer();
 
-			// TODO: Process the image with your AI service
-			// Generate the appropriate prompt based on styleID
-			const context = `Image for user ${message.body.userID}`; // You can customize the context
-			const prompt = generatePrompt(message.body.styleID, context);
+			// Create OpenAI service
+			const openAIService = createOpenAIService(env.OPENAI_API_KEY);
+
+			// Analyze the image to get its context
+			console.log(`Analyzing image for request ${message.body.requestId}...`);
+			const imageContext = await openAIService.analyzeImage(imageData);
+			console.log(`Image analysis result: ${imageContext.substring(0, 100)}...`);
+
+			// Generate the appropriate prompt based on styleID and image context
+			const prompt = generatePrompt(message.body.styleID, imageContext);
 
 			console.log(`Using prompt: ${prompt.substring(0, 100)}...`); // Log the first part of the prompt
 
