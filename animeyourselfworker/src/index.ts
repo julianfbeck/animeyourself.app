@@ -43,10 +43,12 @@ interface QueueMessage {
 }
 
 export interface Env {
-	// Define the gemini queue binding
-	GEMINI: Queue;
 	// Define the R2 bucket binding
 	IMAGES: R2Bucket;
+	// OpenAI API key for image analysis
+	OPENAI_API_KEY: string;
+	UPSTASH_REDIS_REST_URL: string;
+	UPSTASH_REDIS_REST_TOKEN: string;
 }
 
 export default {

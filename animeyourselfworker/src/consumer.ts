@@ -14,6 +14,8 @@ export interface Env {
 	IMAGES: R2Bucket;
 	// OpenAI API key for image analysis
 	OPENAI_API_KEY: string;
+	UPSTASH_REDIS_REST_URL: string;
+	UPSTASH_REDIS_REST_TOKEN: string;
 }
 
 // Import the promptGenerator and OpenAI service
