@@ -75,7 +75,7 @@ export default {
 			if (!requestId) {
 				return new Response(JSON.stringify({
 					success: false,
-					message: "Request ID is required"
+					error: "Invalid status request"
 				}), {
 					headers: { 'Content-Type': 'application/json' },
 					status: 400
@@ -89,41 +89,75 @@ export default {
 				if (!state) {
 					return new Response(JSON.stringify({
 						success: false,
-						message: "Request ID not found"
+						error: "Prediction not found"
 					}), {
 						headers: { 'Content-Type': 'application/json' },
 						status: 404
 					});
 				}
 
-				// If processing is completed, return the processed image
+				// If processing is still in the queue
+				if (state === "queued" || state === "processing") {
+					return new Response(JSON.stringify({
+						success: true,
+						data: {
+							status: "pending"
+						}
+					}), {
+						headers: { 'Content-Type': 'application/json' }
+					});
+				}
+
+				// If processing failed
+				if (state === "failed") {
+					return new Response(JSON.stringify({
+						success: true,
+						data: {
+							status: "failed"
+						}
+					}), {
+						headers: { 'Content-Type': 'application/json' }
+					});
+				}
+
+				// If processing is completed
 				if (state === "completed") {
 					const processedImageKey = `processed/${requestId}`;
 					const processedImage = await env.IMAGES.get(processedImageKey);
 
 					if (!processedImage) {
 						return new Response(JSON.stringify({
-							success: false,
-							message: "Processed image not found"
+							success: true,
+							data: {
+								status: "pending"
+							}
 						}), {
-							headers: { 'Content-Type': 'application/json' },
-							status: 404
+							headers: { 'Content-Type': 'application/json' }
 						});
 					}
 
-					// Return the processed image
-					return new Response(processedImage.body, {
-						headers: {
-							'Content-Type': 'image/png',
-							'Cache-Control': 'public, max-age=31536000'
+					// Generate image URL
+					const imageUrl = `https://gemini.app.juli.sh/${requestId}.png`;
+
+					// Return the processed image data
+					return new Response(JSON.stringify({
+						success: true,
+						data: {
+							status: "completed",
+							id: requestId,
+							url: imageUrl
 						}
+					}), {
+						headers: { 'Content-Type': 'application/json' }
 					});
 				}
 
-				// If not completed, return the current state
+				// If we get here, it's an unknown state
 				return new Response(JSON.stringify({
 					success: true,
-					state: state
+					data: {
+						status: "pending"
+					}
 				}), {
 					headers: { 'Content-Type': 'application/json' }
 				});
@@ -132,8 +166,8 @@ export default {
 				console.error('Error checking status:', error);
 				return new Response(JSON.stringify({
 					success: false,
-					message: "Error checking status",
-					error: error instanceof Error ? error.message : String(error)
+					error: "Error checking status",
+					details: error instanceof Error ? error.message : String(error)
 				}), {
 					headers: { 'Content-Type': 'application/json' },
 					status: 500

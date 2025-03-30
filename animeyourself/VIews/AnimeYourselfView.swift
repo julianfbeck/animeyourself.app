@@ -516,16 +516,35 @@ struct AnimeYourselfView: View {
                 .scaleEffect(1.5)
                 .tint(.white)
             
-            Text("Creating anime portrait...")
+            Text(getStatusText(status: model.processingStatus))
                 .font(.system(.headline, design: .rounded))
                 .foregroundColor(.white)
+            
+            if model.processingStatus == "queued" {
+                Text("This may take a moment...")
+                    .font(.system(.subheadline, design: .rounded))
+                    .foregroundColor(.white.opacity(0.8))
+                    .padding(.top, 4)
+            }
         }
         .frame(maxWidth: .infinity)
         .padding()
         .background(errorBackgroundStyle)
     }
     
-    
+    // Function to get user-friendly status text
+    private func getStatusText(status: String) -> String {
+        switch status {
+        case "queued":
+            return "Your image is in queue..."
+        case "processing":
+            return "Creating anime portrait..."
+        case "completed":
+            return "Completed! Finishing up..."
+        default:
+            return "Creating anime portrait..."
+        }
+    }
     
     private var errorBackgroundStyle: some View {
         RoundedRectangle(cornerRadius: 16)

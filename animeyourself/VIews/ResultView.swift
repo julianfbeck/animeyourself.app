@@ -103,13 +103,13 @@ struct ResultView: View {
                                                 }
                                         })
                                     
-                                    // Loading spinner
+                                    // Loading spinner with status
                                     VStack {
                                         ProgressView()
                                             .scaleEffect(2)
                                             .tint(.white)
                                         
-                                        Text("Creating anime portrait...")
+                                        Text(getStatusText(status: model.processingStatus))
                                             .font(.system(.headline, design: .rounded))
                                             .foregroundColor(.white)
                                             .padding(.top, 20)
@@ -360,9 +360,21 @@ struct ResultView: View {
     private func saveImageToPhotoLibrary(_ image: UIImage) {
         UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
     }
+    
+    // Function to get user-friendly status text
+    private func getStatusText(status: String) -> String {
+        switch status {
+        case "queued":
+            return "Your image is in queue..."
+        case "processing":
+            return "Creating anime portrait..."
+        case "completed":
+            return "Completed! Finishing up..."
+        default:
+            return "Creating anime portrait..."
+        }
+    }
 }
-
-
 
 struct ActionButton: View {
     let title: String
