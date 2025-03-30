@@ -12,6 +12,7 @@
  */
 
 import { processQueue } from './consumer';
+import { Redis } from '@upstash/redis/cloudflare'
 
 /**
  * Cloudflare Worker that accepts image processing requests and puts them into a queue named "gemini"
@@ -45,9 +46,9 @@ interface QueueMessage {
 export interface Env {
 	// Define the R2 bucket binding
 	IMAGES: R2Bucket;
+	GEMINI: Queue;
 	// OpenAI API key for image analysis
 	OPENAI_API_KEY: string;
-	UPSTASH_REDIS_REST_URL: string;
 	UPSTASH_REDIS_REST_TOKEN: string;
 }
 
@@ -56,6 +57,12 @@ export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
 		// Generate a unique ID for this request
 		const requestId = crypto.randomUUID();
+
+		// Initialize Redis client
+		const redis = new Redis({
+			url: "https://ample-raven-18694.upstash.io",
+			token: env.UPSTASH_REDIS_REST_TOKEN,
+		})
 
 		// Check if the path is correct
 		const url = new URL(request.url);
@@ -153,6 +160,9 @@ export default {
 				}
 			});
 
+			// Store initial state in Redis
+			await redis.set(requestId, "queued");
+
 			// Create the message to be queued
 			const message: QueueMessage = {
 				image: {
@@ -173,7 +183,8 @@ export default {
 				success: true,
 				message: "Image processing request queued successfully",
 				requestId,
-				imageKey
+				imageKey,
+				state: "queued"
 			}), {
 				headers: {
 					'Content-Type': 'application/json',
@@ -182,6 +193,8 @@ export default {
 				status: 202 // Accepted
 			});
 		} catch (error) {
+			await redis.del(requestId);
+
 			// Handle any errors
 			console.error(`Error processing request: ${error}`);
 
@@ -189,7 +202,8 @@ export default {
 				success: false,
 				message: "Failed to queue image processing request",
 				error: error instanceof Error ? error.message : String(error),
-				requestId
+				requestId,
+				state: "failed"
 			}), {
 				headers: {
 					'Content-Type': 'application/json',

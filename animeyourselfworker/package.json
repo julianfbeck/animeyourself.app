@@ -17,6 +17,7 @@
 		"wrangler": "^4.6.0"
 	},
 	"dependencies": {
+		"@upstash/redis": "^1.34.6",
 		"cloudflare": "link:@upstash/redis/cloudflare",
 		"openai": "^4.90.0"
 	}

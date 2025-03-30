@@ -1,3 +1,8 @@
+
+import { Redis } from '@upstash/redis/cloudflare'
+import { generatePrompt } from './promptGenerator';
+import { createOpenAIService } from './openaiService';
+
 interface QueueMessage {
 	image: {
 		key: string;  // R2 object key
@@ -14,19 +19,23 @@ export interface Env {
 	IMAGES: R2Bucket;
 	// OpenAI API key for image analysis
 	OPENAI_API_KEY: string;
-	UPSTASH_REDIS_REST_URL: string;
 	UPSTASH_REDIS_REST_TOKEN: string;
 }
 
-// Import the promptGenerator and OpenAI service
-import { generatePrompt } from './promptGenerator';
-import { createOpenAIService } from './openaiService';
-
 export async function processQueue(batch: MessageBatch<QueueMessage>, env: Env): Promise<void> {
+	// Initialize Redis client
+	const redis = new Redis({
+		url: "https://ample-raven-18694.upstash.io",
+		token: env.UPSTASH_REDIS_REST_TOKEN,
+	})
+
 	// Process each message in the batch
 	for (const message of batch.messages) {
 		try {
 			console.log(`Processing request ${message.body.requestId}`);
+
+			// Update state to processing
+			await redis.set(message.body.requestId, "processing");
 
 			// Fetch the image from R2
 			const imageObject = await env.IMAGES.get(message.body.image.key);
@@ -61,6 +70,9 @@ export async function processQueue(batch: MessageBatch<QueueMessage>, env: Env):
 
 			// await storage.put(`processed/${message.body.userID}/${message.body.requestId}`, processedImage);
 
+			// Update state to completed
+			await redis.set(message.body.requestId, "completed");
+
 			// await notifyUser({
 			//     userId: message.body.userID,
 			//     requestId: message.body.requestId,
@@ -74,6 +86,9 @@ export async function processQueue(batch: MessageBatch<QueueMessage>, env: Env):
 			message.ack();
 		} catch (error) {
 			console.error(`Error processing message ${message.body.requestId}:`, error);
+
+			// Update state to failed
+			await redis.set(message.body.requestId, "failed");
 
 			// If there's an error, acknowledge the message
 			// The queue system will handle retries automatically based on your configuration
