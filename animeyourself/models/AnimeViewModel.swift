@@ -10,6 +10,7 @@
 import Foundation
 import SwiftUI
 import os.log
+import RevenueCat
 
 
 @MainActor
@@ -23,7 +24,7 @@ class AnimeViewModel: ObservableObject {
     @Published var navigateToResult = false
     @Published var selectedStyle: String = "anime-default"
     
-    private let serverURL = "https://anime-transformer.app.juli.sh/api/transform"
+    private let serverURL = "https://animeyourselfworker.beanvault.workers.dev/v1/new"
     
     private let logger = Logger(
         subsystem: Bundle.main.bundleIdentifier ?? "com.julianbeck.animeyourself",
@@ -86,7 +87,7 @@ class AnimeViewModel: ObservableObject {
         let styleID = styleIDs[styleName] ?? "anime-default-001"
         
         // Get RevenueCat user ID from UserDefaults or any other source you're using
-        let revenueCatUserID = UserDefaults.standard.string(forKey: "revenueCatUserID") ?? "anonymous"
+        let revenueCatUserID = Purchases.shared.appUserID
         
         // Create request body
         let requestBody: [String: Any] = [

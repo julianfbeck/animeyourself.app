@@ -16,9 +16,9 @@ struct MainView: View {
                 OnboardingView()
             } else {
                 AnimeYourselfView()
-                    .fullScreenCover(isPresented: $globalViewModel.isShowingPayWall) {
+//                    .fullScreenCover(isPresented: $globalViewModel.isShowingPayWall) {
 //                        PayWallView()
-                    }
+//                    }
             }
         }
     }
