@@ -68,16 +68,15 @@ struct AnimeYourselfView: View {
                 // Main content
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 30) {
-//                        headerView
-//                        
-//                        imageSelectionView
+                        headerView
+                        imageSelectionView
                         
                         if model.isProcessing {
-//                            processingView
+                            processingView
                         } else if let _ = model.processedImage {
                             // Display View Result button with Reset button inline
                             HStack(spacing: 15) {
-                                NavigationLink(destination: ResultView(model: model)) {
+                                NavigationLink(destination: ResultView()) {
                                     HStack(spacing: 10) {
                                         Image(systemName: "eye")
                                             .font(.system(size: 18))
@@ -117,7 +116,7 @@ struct AnimeYourselfView: View {
                         }
                         
                         // Add a programmatic navigation link
-                        NavigationLink(destination: ResultView(model: model), isActive: $model.navigateToResult) {
+                        NavigationLink(destination: ResultView(), isActive: $model.navigateToResult) {
                             EmptyView()
                         }
                         
@@ -182,26 +181,26 @@ struct AnimeYourselfView: View {
                         }
                         
                         // Add reset button when an image is selected but no error or result is shown
-                        if model.selectedImage != nil && !model.isProcessing && model.errorMessage == nil && model.processedImage == nil {
-                            Button {
-                                model.clearImages()
-                                photoPickerItem = nil
-                            } label: {
-                                HStack {
-                                    Image(systemName: "arrow.triangle.2.circlepath")
-                                    Text("Reset")
-                                }
-                                .font(.system(.subheadline, design: .rounded, weight: .medium))
-                                .foregroundColor(.white)
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 8)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .fill(Color.gray.opacity(0.6))
-                                )
-                            }
-                            .padding(.top, 8)
-                        }
+//                        if model.selectedImage != nil && !model.isProcessing && model.errorMessage == nil && model.processedImage == nil {
+//                            Button {
+//                                model.clearImages()
+//                                photoPickerItem = nil
+//                            } label: {
+//                                HStack {
+//                                    Image(systemName: "arrow.triangle.2.circlepath")
+//                                    Text("Reset")
+//                                }
+//                                .font(.system(.subheadline, design: .rounded, weight: .medium))
+//                                .foregroundColor(.white)
+//                                .padding(.horizontal, 16)
+//                                .padding(.vertical, 8)
+//                                .background(
+//                                    RoundedRectangle(cornerRadius: 12)
+//                                        .fill(Color.gray.opacity(0.6))
+//                                )
+//                            }
+//                            .padding(.top, 8)
+//                        }
                         
                         Spacer()
                     }
