@@ -75,7 +75,7 @@ export async function processQueue(batch: MessageBatch<QueueMessage>, env: Env):
 			);
 
 			// Store the processed image in R2
-			const processedImageKey = `processed/${message.body.requestId}`;
+			const processedImageKey = `processed/${message.body.requestId}.png`;
 			await env.IMAGES.put(processedImageKey, processedImageData, {
 				httpMetadata: {
 					contentType: 'image/png' // Gemini always returns PNG
