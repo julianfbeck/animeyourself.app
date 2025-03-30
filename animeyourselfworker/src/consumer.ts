@@ -15,6 +15,9 @@ export interface Env {
 	// Define any other necessary bindings (e.g., AI service, output storage, etc.)
 }
 
+// Import the promptGenerator
+import { generatePrompt } from './promptGenerator';
+
 export async function processQueue(batch: MessageBatch<QueueMessage>, env: Env): Promise<void> {
 	// Process each message in the batch
 	for (const message of batch.messages) {
@@ -33,16 +36,17 @@ export async function processQueue(batch: MessageBatch<QueueMessage>, env: Env):
 			const imageData = await imageObject.arrayBuffer();
 
 			// TODO: Process the image with your AI service
-			// This is where you would:
-			// 1. Send the image to your AI service with the specified styleID
-			// 2. Get the processed image back
-			// 3. Save the result to storage
-			// 4. Notify the user that their image is ready (e.g., through a webhook or websocket)
+			// Generate the appropriate prompt based on styleID
+			const context = `Image for user ${message.body.userID}`; // You can customize the context
+			const prompt = generatePrompt(message.body.styleID, context);
 
-			// Example pseudo-code:
+			console.log(`Using prompt: ${prompt.substring(0, 100)}...`); // Log the first part of the prompt
+
+			// Example pseudo-code for AI service integration:
 			// const processedImage = await aiService.processImage({
 			//     image: imageData,
-			//     styleId: message.body.styleID
+			//     styleId: message.body.styleID,
+			//     prompt: prompt
 			// });
 
 			// await storage.put(`processed/${message.body.userID}/${message.body.requestId}`, processedImage);
