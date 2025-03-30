@@ -1,7 +1,7 @@
-
 import { Redis } from '@upstash/redis/cloudflare'
 import { generatePrompt } from './promptGenerator';
 import { createOpenAIService } from './openaiService';
+import { createGeminiService } from './geminiService';
 
 interface QueueMessage {
 	image: {
@@ -19,6 +19,8 @@ export interface Env {
 	IMAGES: R2Bucket;
 	// OpenAI API key for image analysis
 	OPENAI_API_KEY: string;
+	// Gemini API key for image processing
+	GOOGLE_API_KEY: string;
 	UPSTASH_REDIS_REST_TOKEN: string;
 }
 
@@ -41,6 +43,7 @@ export async function processQueue(batch: MessageBatch<QueueMessage>, env: Env):
 			const imageObject = await env.IMAGES.get(message.body.image.key);
 			if (!imageObject) {
 				console.error(`Image not found in R2: ${message.body.image.key}`);
+				await redis.set(message.body.requestId, "failed");
 				message.ack();
 				continue;
 			}
@@ -48,7 +51,7 @@ export async function processQueue(batch: MessageBatch<QueueMessage>, env: Env):
 			// Get the image data as an ArrayBuffer
 			const imageData = await imageObject.arrayBuffer();
 
-			// Create OpenAI service
+			// Create OpenAI service for image analysis
 			const openAIService = createOpenAIService(env.OPENAI_API_KEY);
 
 			// Analyze the image to get its context
@@ -58,29 +61,33 @@ export async function processQueue(batch: MessageBatch<QueueMessage>, env: Env):
 
 			// Generate the appropriate prompt based on styleID and image context
 			const prompt = generatePrompt(message.body.styleID, imageContext);
+			console.log(`Using prompt: ${prompt.substring(0, 100)}...`);
 
-			console.log(`Using prompt: ${prompt.substring(0, 100)}...`); // Log the first part of the prompt
+			// Create Gemini service for image processing
+			const geminiService = createGeminiService(env.GOOGLE_API_KEY);
 
-			// Example pseudo-code for AI service integration:
-			// const processedImage = await aiService.processImage({
-			//     image: imageData,
-			//     styleId: message.body.styleID,
-			//     prompt: prompt
-			// });
+			// Process the image with Gemini
+			console.log('Processing image with Gemini...');
+			const processedImageData = await geminiService.processImage(
+				imageData,
+				message.body.image.mime_type,
+				prompt
+			);
 
-			// await storage.put(`processed/${message.body.userID}/${message.body.requestId}`, processedImage);
+			// Store the processed image in R2
+			const processedImageKey = `processed/${message.body.requestId}`;
+			await env.IMAGES.put(processedImageKey, processedImageData, {
+				httpMetadata: {
+					contentType: 'image/png' // Gemini always returns PNG
+				}
+			});
 
 			// Update state to completed
 			await redis.set(message.body.requestId, "completed");
 
-			// await notifyUser({
-			//     userId: message.body.userID,
-			//     requestId: message.body.requestId,
-			//     status: 'completed'
-			// });
-
 			console.log(`Processed request ${message.body.requestId}`);
-			console.log(`Image size: ${imageData.byteLength} bytes`);
+			console.log(`Original image size: ${imageData.byteLength} bytes`);
+			console.log(`Processed image size: ${processedImageData.byteLength} bytes`);
 
 			// Acknowledge the message after successful processing
 			message.ack();
@@ -89,18 +96,11 @@ export async function processQueue(batch: MessageBatch<QueueMessage>, env: Env):
 
 			// Update state to failed
 			await redis.set(message.body.requestId, "failed");
+			await redis.expire(message.body.requestId, 60 * 60 * 24);
 
 			// If there's an error, acknowledge the message
 			// The queue system will handle retries automatically based on your configuration
 			message.ack();
-
-			// TODO: Notify the user about the failure
-			// await notifyUser({
-			//     userId: message.body.userID,
-			//     requestId: message.body.requestId,
-			//     status: 'failed',
-			//     error: error instanceof Error ? error.message : 'Unknown error'
-			// });
 		}
 	}
 } 
