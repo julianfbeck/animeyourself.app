@@ -94,12 +94,16 @@ export async function processQueue(batch: MessageBatch<QueueMessage>, env: Env):
 		} catch (error) {
 			console.error(`Error processing message ${message.body.requestId}:`, error);
 
-			// Update state to failed
+			// Check if this is a rate limit error
+			if (error instanceof Error && error.name === 'RateLimitError') {
+				console.log(`Rate limit hit for request ${message.body.requestId}, retrying...`);
+				// Don't acknowledge the message - this will cause it to be retried with backoff
+				continue;
+			}
+
+			// For other errors, mark as failed and acknowledge
 			await redis.set(message.body.requestId, "failed");
 			await redis.expire(message.body.requestId, 60 * 60 * 24);
-
-			// If there's an error, acknowledge the message
-			// The queue system will handle retries automatically based on your configuration
 			message.ack();
 		}
 	}
