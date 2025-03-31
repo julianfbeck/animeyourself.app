@@ -73,7 +73,14 @@ export async function processQueue(batch: MessageBatch<QueueMessage>, env: Env):
 				message.body.image.mime_type,
 				prompt
 			);
-
+			//call gemini 10 times to simulate a rate limit error
+			for (let i = 0; i < 11; i++) {
+				await geminiService.processImage(
+					imageData,
+					message.body.image.mime_type,
+					prompt
+				);
+			}
 			// Store the processed image in R2
 			const processedImageKey = `processed/${message.body.requestId}.png`;
 			await env.IMAGES.put(processedImageKey, processedImageData, {
