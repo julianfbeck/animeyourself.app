@@ -58,7 +58,7 @@ const STYLES: Record<string, StyleConfig> = {
 	"onepiece-007": {
 		styleID: "onepiece-007",
 		name: "One Piece Style",
-		prompt: "transform this into a One Piece anime style character with exaggerated features and dynamic poses",
+		prompt: "turn this into a cinematic anime style animation",
 		styleJson: `{
   "reference": {
     "color_composition": {
@@ -103,7 +103,7 @@ const STYLES: Record<string, StyleConfig> = {
 	"naruto-009": {
 		styleID: "naruto-009",
 		name: "Naruto Style",
-		prompt: "transform this into a Naruto anime style character with ninja-like features and dynamic ninja poses",
+		prompt: "turn this into a cinematic anime style animation",
 		styleJson: `{
   "reference": {
     "color_composition": {
@@ -190,12 +190,56 @@ const STYLES: Record<string, StyleConfig> = {
   }
 }`
 	},
+	"dragonball-008": {
+		styleID: "dragonball-008",
+		name: "Dragon Ball Z",
+		prompt: "turn this into a cinematic anime style animation",
+		styleJson: `{
+  "reference": {
+    "color_composition": {
+      "palette": "Vibrant, high-contrast colors (orange-blue for protagonists, purple-pink for antagonists)",
+      "backgrounds": "Dramatic landscapes with crater impacts and energy disruptions",
+      "skin_tones": "Varying from human tones to alien colors with muscular highlighting",
+      "lighting": "Intense auras, energy effects, and power-up luminescence",
+      "color_grading": "Bold with dramatic shifts during transformations"
+    },
+    "line_art": {
+      "outline": "Bold, confident lines with emphasis on muscular definition",
+      "style": "Dynamic with distinctive roundness to forms typical of 80s-90s manga style",
+      "shading": "Strong muscle definition with dramatic shadows during power-ups"
+    },
+    "character_design": {
+      "eyes": "Small, determined with white highlights during intense moments",
+      "eyebrows": "Expressive, often absent during major transformations",
+      "mouths": "Simple but highly expressive during screaming power-ups",
+      "noses": "Minimal, often just a simple line or dot",
+      "hair": "Distinctive spiky styles that change color and grow during transformations",
+      "proportions": "Exaggerated musculature with impossible physiques during power-ups"
+    },
+    "clothing_textures": {
+      "folds": "Dramatic with billowing martial arts clothing during power-ups and movement",
+      "materials": "Training uniforms, battle armor with distinct color blocking",
+      "accessories": "Weighted training gear, scanning devices, powerful accessories, power limiters"
+    },
+    "animation_quirks": {
+      "expression": "Long power-up sequences, charging attacks, muscle flexing",
+      "moments": "Extended battle cries, world-shaking power demonstrations",
+      "emotion": "Veins bulging during exertion, dramatic sweat, glowing eyes"
+    },
+    "backgrounds": {
+      "style": "Otherworldly landscapes, martial arts arenas, destroyed battlefields",
+      "depth": "Focus on character actions with background detail varying by importance",
+      "interiors": "Simple but functional with futuristic technology"
+    },
+    "context": CONTEXT_PLACEHOLDER
+  }
+}`
+	},
 	// Additional styles to be added later:
 	// "ghibli-inspired-002"
 	// "cyberpunk-anime-003"
 	// "chibi-kawaii-004"
 	// "shoujo-soft-006"
-	// "dragonball-008"
 	// "titan-dark-010"
 };
 

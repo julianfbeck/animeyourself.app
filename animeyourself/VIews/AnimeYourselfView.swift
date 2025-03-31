@@ -26,7 +26,7 @@ struct AnimeYourselfView: View {
         "shonen-dynamic-005",
 //        "shoujo-soft-006",
         "onepiece-007",
-//        "dragonball-008",
+        "dragonball-008",
         "naruto-009",
 //        "titan-dark-010"
     ]

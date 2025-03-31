@@ -85,6 +85,7 @@ export default {
 			try {
 				// Get the processing state from Redis
 				const state = await redis.get(requestId);
+				await redis.expire(requestId, 3600);
 
 				if (!state) {
 					return new Response(JSON.stringify({
