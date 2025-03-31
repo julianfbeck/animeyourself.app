@@ -76,7 +76,7 @@ struct AnimeYourselfView: View {
                         } else if let _ = model.processedImage {
                             // Display View Result button with Reset button inline
                             HStack(spacing: 15) {
-                                NavigationLink(destination: ResultView()) {
+                                NavigationLink(destination: ResultView().environmentObject(model)) {
                                     HStack(spacing: 10) {
                                         Image(systemName: "eye")
                                             .font(.system(size: 18))
@@ -116,13 +116,9 @@ struct AnimeYourselfView: View {
                         }
                         
                         // Add a programmatic navigation link
-                        NavigationLink(destination: ResultView(), isActive: $model.navigateToResult) {
+                        NavigationLink(destination: ResultView().environmentObject(model), isActive: $model.navigateToResult) {
                             EmptyView()
                         }
-                        
-                    
-                        
-
                         
                         Spacer()
                     }
@@ -510,49 +506,8 @@ struct AnimeYourselfView: View {
         .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 3)
     }
     
+    // Replace processingView with empty view since we don't need it anymore
     private var processingView: some View {
-        VStack(spacing: 16) {
-            ProgressView()
-                .scaleEffect(1.5)
-                .tint(.white)
-            
-            Text(getStatusText(status: model.processingStatus))
-                .font(.system(.headline, design: .rounded))
-                .foregroundColor(.white)
-            
-            if model.processingStatus == "queued" {
-                Text("This may take a moment...")
-                    .font(.system(.subheadline, design: .rounded))
-                    .foregroundColor(.white.opacity(0.8))
-                    .padding(.top, 4)
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .padding()
-        .background(errorBackgroundStyle)
-    }
-    
-    // Function to get user-friendly status text
-    private func getStatusText(status: String) -> String {
-        switch status {
-        case "queued":
-            return "Your image is in queue..."
-        case "processing":
-            return "Creating anime portrait..."
-        case "completed":
-            return "Completed! Finishing up..."
-        default:
-            return "Creating anime portrait..."
-        }
-    }
-    
-    private var errorBackgroundStyle: some View {
-        RoundedRectangle(cornerRadius: 16)
-            .fill(Color.black.opacity(0.7))
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(.ultraThinMaterial)
-            )
-            .shadow(radius: 8, x: 0, y: 4)
+        EmptyView()
     }
 }

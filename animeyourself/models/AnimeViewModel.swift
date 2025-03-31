@@ -54,6 +54,7 @@ class AnimeViewModel: ObservableObject {
         showConfetti = false
         processingStatus = "queued"
         selectedStyle = style
+        navigateToResult = true
         
         Task {
             do {
@@ -179,6 +180,7 @@ class AnimeViewModel: ObservableObject {
                 // Log the response for debugging
                 if let responseString = String(data: data, encoding: .utf8) {
                     self.logger.debug("Status response (attempt \(attempt)): \(responseString)")
+                    print("Status response (attempt \(attempt)): \(responseString)")
                 }
                 
                 if httpResponse.statusCode == 200 {
@@ -186,7 +188,7 @@ class AnimeViewModel: ObservableObject {
                     do {
                         // Try to parse as dictionary first
                         if let responseDict = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
-                            print(responseDict)
+                            print("Response dict: \(responseDict)")
                             if let success = responseDict["success"] as? Bool, success {
                                 // Check for data object
                                 if let dataDict = responseDict["data"] as? [String: Any] {
@@ -194,6 +196,7 @@ class AnimeViewModel: ObservableObject {
                                     if let status = dataDict["status"] as? String {
                                         self.processingStatus = status
                                         self.logger.info("Processing status: \(status)")
+                                        print("Processing status: \(status)")
                                         
                                         if status == "completed" {
                                             
@@ -201,7 +204,10 @@ class AnimeViewModel: ObservableObject {
                                             // If completed, check for image URL
                                             if let imageUrl = dataDict["url"] as? String {
                                                 self.logger.info("Image URL found: \(imageUrl)")
-                                                self.processedImage = try await fetchImageFromUrl(imageUrl: imageUrl)
+                                                print("Image URL found: \(imageUrl)")
+                                                let loadedImage = try await fetchImageFromUrl(imageUrl: imageUrl)
+                                                print("Image loaded: \(loadedImage.size)")
+                                                self.processedImage = loadedImage
                                                 self.showConfetti = true
                                                 Plausible.shared.trackEvent(event: "anime_transform_success", path: "/transform/success", properties: ["style": self.selectedStyle])
                                                 return
@@ -209,7 +215,10 @@ class AnimeViewModel: ObservableObject {
                                                 // Try output field as fallback
                                                 if let outputArray = dataDict["output"] as? [String], let imageUrl = outputArray.first {
                                                     self.logger.info("Image URL found in output array: \(imageUrl)")
-                                                    self.processedImage = try await fetchImageFromUrl(imageUrl: imageUrl)
+                                                    print("Image URL found in output array: \(imageUrl)")
+                                                    let loadedImage = try await fetchImageFromUrl(imageUrl: imageUrl)
+                                                    print("Image loaded: \(loadedImage.size)")
+                                                    self.processedImage = loadedImage
                                                     self.showConfetti = true
                                                     Plausible.shared.trackEvent(event: "anime_transform_success", path: "/transform/success", properties: ["style": self.selectedStyle])
                                                     return
@@ -228,7 +237,9 @@ class AnimeViewModel: ObservableObject {
                                     self.logger.info("Using legacy state field: \(state)")
                                     
                                     if state == "completed" {
-                                        self.processedImage = try await fetchCompletedImage(requestId: requestId)
+                                        let loadedImage = try await fetchCompletedImage(requestId: requestId)
+                                        print("Legacy image loaded: \(loadedImage.size)")
+                                        self.processedImage = loadedImage
                                         self.showConfetti = true
                                         Plausible.shared.trackEvent(event: "anime_transform_success", path: "/transform/success", properties: ["style": self.selectedStyle])
                                         return

@@ -127,7 +127,7 @@ struct ResultView: View {
                                 .frame(width: UIScreen.main.bounds.width * 0.8) // Set width to 80% of screen width
                                 .frame(maxHeight: UIScreen.main.bounds.height * 0.7)
                                 .preferredColorScheme(.dark)
-
+                                
                             } else {
                                 ProgressView()
                                     .scaleEffect(2)
@@ -137,19 +137,18 @@ struct ResultView: View {
                         // Result State
                         else if let processedImage = model.processedImage {
                             ZStack {
-                                // Image content
-                              
-                                    Image(uiImage: processedImage)
-                                        .resizable()
-                                        .cornerRadius(16)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 16)
-                                                .stroke(Color.white.opacity(0.4), lineWidth: 1)
-                                        )
-                                        .scaledToFit()
-                                        .frame(maxWidth: .infinity)
-                                        .frame(maxHeight: 400)
-                                        .shadow(radius: 10, x: 0, y: 5)
+                                
+                                Image(uiImage: processedImage)
+                                    .resizable()
+                                    .cornerRadius(16)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 16)
+                                            .stroke(Color.white.opacity(0.4), lineWidth: 1)
+                                    )
+                                    .scaledToFit()
+                                    .frame(maxWidth: .infinity)
+                                    .frame(maxHeight: 400)
+                                    .shadow(radius: 10, x: 0, y: 5)
                             }
                             .confettiCannon(
                                 trigger: $confettiTrigger,
@@ -307,12 +306,6 @@ struct ResultView: View {
                             )
                             .padding()
                         }
-                        // No image state
-                        else {
-                            Text("No image available")
-                                .font(.system(.headline, design: .rounded))
-                                .foregroundColor(.white)
-                        }
                     }
                     .padding()
                 }
@@ -326,6 +319,12 @@ struct ResultView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .onAppear {
+            // Start the ripple effect if we're processing
+            if model.isProcessing {
+                startRippleEffect()
+            }
+        }
         .onDisappear {
             // Clean up the timer when view disappears
             timer?.invalidate()
@@ -375,6 +374,7 @@ struct ResultView: View {
         }
     }
 }
+
 
 struct ActionButton: View {
     let title: String
