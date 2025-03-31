@@ -293,8 +293,38 @@ struct AnimeYourselfView: View {
                 VStack(spacing: 20) {
                     selectImageButton
                     
-                    // Feature preview cards
-                    featureCardsView
+                    // Show only the first feature card
+                    VStack(spacing: 16) {
+                        Text("Turn Yourself Into Anime")
+                            .font(.system(.title3, design: .rounded, weight: .bold))
+                            .foregroundColor(.white)
+                            .padding(.top, 8)
+                        
+                        // Only the first feature card
+                        featureCard(
+                            icon: "person.crop.rectangle.stack",
+                            title: "Anime Transformation",
+                            description: "Convert your selfies into stunning anime portraits"
+                        )
+                    }
+                    
+                    // Show anime style selection
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Choose Anime Style:")
+                            .font(.system(.headline, design: .rounded))
+                            .foregroundColor(.white.opacity(0.9))
+                        
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 12) {
+                                ForEach(animeStyles, id: \.self) { style in
+                                    animeStyleButton(style)
+                                }
+                            }
+                            .padding(.horizontal, 4)
+                            .padding(.vertical, 8)
+                        }
+                    }
+                    .padding(.top, 8)
                 }
             }
         }
