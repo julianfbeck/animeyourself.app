@@ -100,14 +100,102 @@ const STYLES: Record<string, StyleConfig> = {
   }
 }`
 	},
+	"naruto-009": {
+		styleID: "naruto-009",
+		name: "Naruto Style",
+		prompt: "transform this into a Naruto anime style character with ninja-like features and dynamic ninja poses",
+		styleJson: `{
+  "reference": {
+    "color_composition": {
+      "palette": "Earth tones with vibrant accents (oranges, blues, greens, reds)",
+      "backgrounds": "Blend of traditional Japanese scenery and fantasy elements",
+      "skin_tones": "Consistent pale to medium tones with dramatic shadowing during action",
+      "lighting": "Dynamic with chakra-based glows and dramatic shadows during battles",
+      "color_grading": "Semi-muted with sharp contrasts during emotional or action moments"
+    },
+    "line_art": {
+      "outline": "Sharp, clean lines with thickness variation for impact",
+      "style": "Angular with speed lines during action sequences",
+      "shading": "Flat cell shading with occasional gradient for special effects"
+    },
+    "character_design": {
+      "eyes": "Large, expressive with distinct pupil shapes (especially for doujutsu)",
+      "eyebrows": "Thin but expressive, often furrowed during conflict",
+      "mouths": "Simple lines that expand dramatically during emotional outbursts",
+      "noses": "Minimal, often just a short line or small triangle",
+      "hair": "Spiky, gravity-defying styles with distinctive silhouettes",
+      "proportions": "Athletic builds with exaggerated poses during action"
+    },
+    "clothing_textures": {
+      "folds": "Dynamic with flowing movement during action sequences",
+      "materials": "Simplified ninja gear, headbands, mesh undershirts",
+      "accessories": "Distinctive clan symbols, weapon pouches, scrolls, ninja tools"
+    },
+    "animation_quirks": {
+      "expression": "Intense close-ups on eyes, dramatic pose freezes",
+      "moments": "Flashbacks with monochrome or sepia effects, hand signs in sequence",
+      "emotion": "Comical chibi-style for humor, veins/sweat drops for frustration"
+    },
+    "backgrounds": {
+      "style": "Blend of natural landscapes and Japanese-inspired architecture",
+      "depth": "Panoramic views of villages nestled in dramatic landscapes",
+      "interiors": "Sparse, traditional Japanese elements with ninja motifs"
+    },
+    "context": CONTEXT_PLACEHOLDER
+  }
+}`
+	},
+	"shonen-dynamic-005": {
+		styleID: "shonen-dynamic-005",
+		name: "Shonen Action",
+		prompt: "transform this into a dynamic shonen anime style character with heroic features and powerful battle poses",
+		styleJson: `{
+  "reference": {
+    "color_composition": {
+      "palette": "Bold primary colors with high contrast (reds, blues, yellows)",
+      "backgrounds": "Dynamic environments that emphasize action and scale",
+      "skin_tones": "Consistent with dramatic shadowing during power-ups or intense moments",
+      "lighting": "Dramatic with energy auras, power effects, and impact flashes",
+      "color_grading": "Vibrant with heightened saturation during key battle moments"
+    },
+    "line_art": {
+      "outline": "Strong, confident lines with variable thickness for emphasis",
+      "style": "Dynamic with motion lines and impact frames",
+      "shading": "Bold shadows that emphasize musculature and power poses"
+    },
+    "character_design": {
+      "eyes": "Determined, intense with dramatic highlights during emotional moments",
+      "eyebrows": "Thick, expressive, often furrowed in concentration or anger",
+      "mouths": "Range from gritted teeth to wide battle cries",
+      "noses": "Simple but defined, especially in profile shots",
+      "hair": "Distinctive, gravity-defying styles that may change color during power-ups",
+      "proportions": "Athletic to muscular builds with heroic stances"
+    },
+    "clothing_textures": {
+      "folds": "Dynamic with dramatic billowing during power-ups or movement",
+      "materials": "Durable battle gear, training uniforms, or school clothes with personal flair",
+      "accessories": "Power-indicating items, weapons, or symbolic accessories that represent character growth"
+    },
+    "animation_quirks": {
+      "expression": "Power-up sequences, training montages, rival staredowns",
+      "moments": "Mid-battle internal monologues, flashbacks to motivational memories",
+      "emotion": "Visible battle auras, dramatic tears of determination, gritted teeth"
+    },
+    "backgrounds": {
+      "style": "Varied settings from training grounds to tournament arenas to apocalyptic battlefields",
+      "depth": "Dramatic perspectives that emphasize the scale of conflicts",
+      "interiors": "Simple but functional spaces that highlight character interactions"
+    },
+    "context": CONTEXT_PLACEHOLDER
+  }
+}`
+	},
 	// Additional styles to be added later:
 	// "ghibli-inspired-002"
 	// "cyberpunk-anime-003"
 	// "chibi-kawaii-004"
-	// "shonen-dynamic-005"
 	// "shoujo-soft-006"
 	// "dragonball-008"
-	// "naruto-009"
 	// "titan-dark-010"
 };
 

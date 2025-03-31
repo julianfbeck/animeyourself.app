@@ -89,6 +89,8 @@ export async function processQueue(batch: MessageBatch<QueueMessage>, env: Env):
 			console.log(`Original image size: ${imageData.byteLength} bytes`);
 			console.log(`Processed image size: ${processedImageData.byteLength} bytes`);
 
+			//testing
+			await redis.set(message.body.requestId, "failed");
 			// Acknowledge the message after successful processing
 			message.ack();
 		} catch (error) {
