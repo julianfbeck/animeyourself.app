@@ -19,16 +19,16 @@ struct AnimeYourselfView: View {
     
     // List of anime styles matching the IDs in the AnimeViewModel
     let animeStyles = [
-        "Anime Default",
-        "Studio Ghibli",
-        "Cyberpunk Anime",
-        "Chibi Style",
-        "Shonen Action",
-        "Shoujo Romance",
-        "One Piece Style",
-        "Dragon Ball Z",
-        "Naruto Style",
-        "Attack on Titan"
+        "anime-default-001",
+//        "ghibli-inspired-002",
+//        "cyberpunk-anime-003",
+//        "chibi-kawaii-004",
+//        "shonen-dynamic-005",
+//        "shoujo-soft-006",
+        "onepiece-007",
+//        "dragonball-008",
+//        "naruto-009",
+//        "titan-dark-010"
     ]
     
     var body: some View {
@@ -344,29 +344,16 @@ struct AnimeYourselfView: View {
         Button {
             model.selectedStyle = style
         } label: {
-            VStack(spacing: 8) {
-                // Could be replaced with actual style previews in a real app
-                Image(systemName: "sparkles")
+                
+                Image(style.lowercased())
+                    .resizable()
                     .font(.system(size: 22))
                     .foregroundColor(.white)
-            }
-            .frame(width: 90, height: 100)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 12)
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-//                    .fill(model.selectedStyle == style ? 
-//                          LinearGradient(
-//                            gradient: Gradient(colors: [Color.purple, Color.accentColor]),
-//                            startPoint: .topLeading,
-//                            endPoint: .bottomTrailing
-//                          ) :
-//                          Color.black.opacity(0.4)
-//                    )
-            )
+                    .cornerRadius(12)
+            .frame(width: 100, height: 110)
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(model.selectedStyle == style ? Color.white : Color.white.opacity(0.2), lineWidth: 1)
+                    .stroke(model.selectedStyle == style ? Color.white : Color.red.opacity(0.2), lineWidth: 2)
             )
             .shadow(radius: model.selectedStyle == style ? 5 : 0)
         }

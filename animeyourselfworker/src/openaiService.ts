@@ -28,12 +28,12 @@ export class OpenAIService {
 				messages: [
 					{
 						role: "system",
-						content: "You are an AI assistant that analyzes images and provides concise, detailed descriptions of their content, focusing on the main subjects, actions, and setting."
+						content: "You are an AI assistant that creates single-paragraph descriptions of images, focusing primarily on people's appearances, facial expressions, poses, clothing, and the surrounding environment. Describe everything in a flowing, natural narrative style without line breaks. Keep descriptions concise yet detailed about the human elements."
 					},
 					{
 						role: "user",
 						content: [
-							{ type: "text", text: "Describe what you see in this image in detail." },
+							{ type: "text", text: "Describe this image in a single flowing paragraph, focusing on the people (their appearance, expressions, poses, and clothing) and the setting they're in. Include relevant background details that set the scene." },
 							{
 								type: "image_url",
 								image_url: {

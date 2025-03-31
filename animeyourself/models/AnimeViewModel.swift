@@ -22,7 +22,7 @@ class AnimeViewModel: ObservableObject {
     @Published var showResultView = false
     @Published var showConfetti = false
     @Published var navigateToResult = false
-    @Published var selectedStyle: String = "anime-default"
+    @Published var selectedStyle: String = "anime-default-001"
     @Published var processingStatus: String = "queued"
     @Published var requestId: String?
     
@@ -33,20 +33,6 @@ class AnimeViewModel: ObservableObject {
         subsystem: Bundle.main.bundleIdentifier ?? "com.julianbeck.animeyourself",
         category: "AnimeViewModel"
     )
-    
-    // Dictionary mapping style names to style IDs
-    private let styleIDs: [String: String] = [
-        "Anime Default": "anime-default-001",
-        "Studio Ghibli": "ghibli-inspired-002",
-        "Cyberpunk Anime": "cyberpunk-anime-003",
-        "Chibi Style": "chibi-kawaii-004",
-        "Shonen Action": "shonen-dynamic-005",
-        "Shoujo Romance": "shoujo-soft-006",
-        "One Piece Style": "onepiece-007",
-        "Dragon Ball Z": "dragonball-008",
-        "Naruto Style": "naruto-009",
-        "Attack on Titan": "titan-dark-010"
-    ]
     
     func processImage(_ image: UIImage, style: String) {
         isProcessing = true
@@ -95,9 +81,6 @@ class AnimeViewModel: ObservableObject {
         // Convert UIImage to base64 string
         let base64String = imageData.base64EncodedString()
         
-        // Get the style ID from the style name
-        let styleID = styleIDs[styleName] ?? "anime-default-001"
-        
         // Get RevenueCat user ID
         let revenueCatUserID = Purchases.shared.appUserID
         
@@ -107,7 +90,7 @@ class AnimeViewModel: ObservableObject {
                 "data": base64String,
                 "mime_type": "image/jpeg"
             ],
-            "styleID": styleID,
+            "styleID": styleName,
             "userID": revenueCatUserID
         ]
         
