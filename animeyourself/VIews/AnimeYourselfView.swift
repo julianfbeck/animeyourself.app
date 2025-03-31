@@ -19,8 +19,8 @@ struct AnimeYourselfView: View {
     
     // List of anime styles matching the IDs in the AnimeViewModel
     let animeStyles = [
-        "anime-default-001",
-//        "ghibli-inspired-002",
+//        "anime-default-001",
+        "ghibli-inspired-002",
 //        "cyberpunk-anime-003",
 //        "chibi-kawaii-004",
         "shonen-dynamic-005",
@@ -383,20 +383,35 @@ struct AnimeYourselfView: View {
     
     private func animeStyleButton(_ style: String) -> some View {
         Button {
-            model.selectedStyle = style
+            if style == animeStyles[0] || globalViewModel.isPro {
+                model.selectedStyle = style
+            } else {
+                globalViewModel.isShowingPayWall = true
+            }
         } label: {
-                
+            ZStack {
                 Image(style.lowercased())
                     .resizable()
                     .font(.system(size: 22))
                     .foregroundColor(.white)
                     .cornerRadius(12)
-            .frame(width: 100, height: 110)
-            .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(model.selectedStyle == style ? Color.white : Color.red.opacity(0.2), lineWidth: 2)
-            )
-            .shadow(radius: model.selectedStyle == style ? 5 : 0)
+                    .frame(width: 100, height: 110)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(model.selectedStyle == style ? Color.white : Color.red.opacity(0.2), lineWidth: 2)
+                    )
+                    .shadow(radius: model.selectedStyle == style ? 5 : 0)
+                
+                if style != animeStyles[0] && !globalViewModel.isPro {
+                    ZStack {
+                        Color.black.opacity(0.6)
+                        Image(systemName: "lock.fill")
+                            .font(.system(size: 30))
+                            .foregroundColor(.white)
+                    }
+                    .cornerRadius(12)
+                }
+            }
         }
     }
     

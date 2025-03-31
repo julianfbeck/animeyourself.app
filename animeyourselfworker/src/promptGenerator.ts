@@ -55,6 +55,51 @@ const STYLES: Record<string, StyleConfig> = {
   }
 }`
 	},
+	"ghibli-inspired-002": {
+		styleID: "ghibli-inspired-002",
+		name: "Studio Ghibli",
+		prompt: "transform this into a Studio Ghibli style character with soft, natural features and watercolor-like qualities",
+		styleJson: `{
+  "reference": {
+    "color_composition": {
+      "palette": "Watercolor-inspired pastels with rich natural greens, blues, and earthy tones",
+      "backgrounds": "Hand-painted detailed environments with atmospheric depth and texture",
+      "skin_tones": "Warm, natural with subtle blush and gentle shadowing",
+      "lighting": "Soft, diffuse natural light with golden hours and gentle lens flares",
+      "color_grading": "Slightly desaturated with emphasis on atmosphere over contrast"
+    },
+    "line_art": {
+      "outline": "Delicate, varying thickness with hand-drawn quality",
+      "style": "Organic flowing lines that emphasize natural movement",
+      "shading": "Soft watercolor-like gradients with minimal hard shadows"
+    },
+    "character_design": {
+      "eyes": "Large but realistic with detailed irises and subtle reflections",
+      "eyebrows": "Expressive, naturally shaped with fine detail",
+      "mouths": "Simple but emotionally expressive, often in subtle ways",
+      "noses": "Defined but not emphasized, with realistic proportions",
+      "hair": "Detailed individual strands that move naturally with wind and motion",
+      "proportions": "Realistic child or adult proportions with natural movement"
+    },
+    "clothing_textures": {
+      "folds": "Detailed fabric movement with realistic physics and weight",
+      "materials": "Textured natural fabrics with visible weave and worn qualities",
+      "accessories": "Detailed practical items with weathered, lived-in quality"
+    },
+    "animation_quirks": {
+      "expression": "Quiet contemplative moments, characters observing nature",
+      "moments": "Wind blowing through grass, clouds moving, food being prepared",
+      "emotion": "Subtle facial expressions conveying complex emotions"
+    },
+    "backgrounds": {
+      "style": "Meticulously detailed environments with rich textural elements",
+      "depth": "Layered backgrounds creating immersive sense of place",
+      "interiors": "Lived-in spaces with personal items and domestic details"
+    },
+    "context": CONTEXT_PLACEHOLDER
+  }
+}`
+	},
 	"onepiece-007": {
 		styleID: "onepiece-007",
 		name: "One Piece Style",
@@ -236,7 +281,6 @@ const STYLES: Record<string, StyleConfig> = {
 }`
 	},
 	// Additional styles to be added later:
-	// "ghibli-inspired-002"
 	// "cyberpunk-anime-003"
 	// "chibi-kawaii-004"
 	// "shoujo-soft-006"
