@@ -59,7 +59,7 @@ class GlobalViewModel: ObservableObject {
         setupPurchases()
         fetchOfferings()
         // testing
-        self.isPro = true
+//        self.isPro = true
         //testing 
         
         if !self.isPro && !self.isShowingOnboarding && !self.isFirstLaunch {

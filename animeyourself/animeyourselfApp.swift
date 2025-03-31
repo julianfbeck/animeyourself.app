@@ -14,7 +14,7 @@ struct animeyourselfApp: App {
     @StateObject var wmrm = AnimeViewModel()
     
     init() {
-        Purchases.configure(withAPIKey: "appl_YFbOWJoZtxUiCnjJRaMDgEMqYAV")
+        Purchases.configure(withAPIKey: "appl_xIhJySLYOoywhePdUmVaSAnaZLj")
     }
     
     var body: some Scene {

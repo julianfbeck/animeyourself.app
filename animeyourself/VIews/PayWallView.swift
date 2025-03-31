@@ -97,21 +97,26 @@ struct PayWallView: View {
                     
                     // Header
                     VStack(spacing: 16) {
-                        Image(systemName: "wand.and.stars")
+                        Image(systemName: "sparkles.rectangle.stack")
                             .font(.system(size: 48))
                             .foregroundColor(.white)
                         
-                        Text("Untag Premium")
+                        Text("AniFy Pro")
                             .font(.system(size: 32, weight: .bold, design: .rounded))
                             .foregroundColor(.white)
                             .shadow(color: .black.opacity(0.3), radius: 3, x: 0, y: 2)
+                            
+                        Text("Unlock Your Anime Journey")
+                            .font(.system(size: 18, weight: .medium, design: .rounded))
+                            .foregroundColor(.white.opacity(0.9))
+                            .multilineTextAlignment(.center)
                     }
                     
                     // Features list
                     VStack(alignment: .leading, spacing: 20) {
-                        FeatureRow(icon: "photo.stack.fill", text: "Unlimited photos")
-                        FeatureRow(icon: "bag.circle.fill", text: "No purchase screens")
-                        FeatureRow(icon: "bolt.fill", text: "Priority processing queue")
+                        FeatureRow(icon: "infinity.circle.fill", text: "Unlimited transformations")
+                        FeatureRow(icon: "bolt.circle.fill", text: "Priority processing queue")
+                        FeatureRow(icon: "paintpalette.fill", text: "Access all anime styles")
                     }
                     .padding(.vertical, 16)
                     .padding(.horizontal, 8)
@@ -300,7 +305,7 @@ struct PayWallView: View {
                     
                     // Footer links
                     HStack(spacing: 16) {
-                        Button("Restore Purchases") {
+                        Button("Restore") {
                             globalViewModel.restorePurchase()
                         }
                         .font(.footnote)
@@ -357,13 +362,18 @@ struct FeatureRow: View {
         HStack(spacing: 16) {
             ZStack {
                 Circle()
-                    .fill(Color.accentColor.opacity(0.2))
-                    .frame(width: 36, height: 36)
+                    .fill(LinearGradient(
+                        colors: [Color.accentColor, Color.purple.opacity(0.7)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ))
+                    .frame(width: 40, height: 40)
                 
                 Image(systemName: icon)
                     .foregroundColor(.white)
-                    .font(.system(size: 18))
+                    .font(.system(size: 20, weight: .semibold))
             }
+            .shadow(color: Color.accentColor.opacity(0.3), radius: 4, x: 0, y: 2)
             
             Text(text)
                 .font(.system(size: 17, weight: .semibold, design: .rounded))
