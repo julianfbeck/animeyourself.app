@@ -101,15 +101,10 @@ struct PayWallView: View {
                             .font(.system(size: 48))
                             .foregroundColor(.white)
                         
-                        Text("AniFy Pro")
+                        Text("UNLIMITED")
                             .font(.system(size: 32, weight: .bold, design: .rounded))
                             .foregroundColor(.white)
                             .shadow(color: .black.opacity(0.3), radius: 3, x: 0, y: 2)
-                            
-                        Text("Unlock Your Anime Journey")
-                            .font(.system(size: 18, weight: .medium, design: .rounded))
-                            .foregroundColor(.white.opacity(0.9))
-                            .multilineTextAlignment(.center)
                     }
                     
                     // Features list

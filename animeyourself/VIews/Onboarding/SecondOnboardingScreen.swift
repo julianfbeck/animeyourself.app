@@ -15,16 +15,16 @@ struct SecondOnboardingScreen: View {
     var body: some View {
         VStack(spacing: 24) {
             // Title at the top
-            Text("Remove Watermarks")
+            Text("Transform Your Photos")
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .padding(.top, 40)
             
             // Image container
             ZStack {
-                // Watermarked image
+                // Original photo
                 if animationPhase == 1 || animationPhase == 2 {
-                    Image("example")
+                    Image("example-person")  // Replace with your example person image
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(maxWidth: .infinity)
@@ -35,9 +35,9 @@ struct SecondOnboardingScreen: View {
                         .modifier(ShakeEffect(animating: animationPhase == 2))
                 }
                 
-                // Clean image with glow effect
+                // Anime transformed image with glow effect
                 if animationPhase == 3 {
-                    Image("example1")
+                    Image("example-anime")  // Replace with your example anime transformation
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(maxWidth: .infinity)
@@ -46,14 +46,12 @@ struct SecondOnboardingScreen: View {
                         .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 5)
                         .scaleEffect(scale)
                         .transition(.scale)
-                        // Inner glow effect
                         .overlay(
                             RoundedRectangle(cornerRadius: 24)
                                 .stroke(Color.accentColor, lineWidth: 2)
                                 .blur(radius: glowRadius)
                                 .opacity(glowOpacity)
                         )
-                        // Outer glow effect
                         .background(
                             RoundedRectangle(cornerRadius: 24)
                                 .fill(Color.accentColor)
@@ -75,14 +73,28 @@ struct SecondOnboardingScreen: View {
                 radius: 200
             )
             
+            // Example styles grid
+            if animationPhase == 3 {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 12) {
+                        StyleExample(name: "Default", imageName: "anime-default-001")
+                        StyleExample(name: "Shonen", imageName: "shonen-dynamic-005")
+                        StyleExample(name: "One Piece", imageName: "onepiece-007")
+                        StyleExample(name: "Naruto", imageName: "naruto-009")
+                    }
+                    .padding(.horizontal)
+                }
+                .frame(height: 120)
+            }
+            
             // Improved copywriting
             VStack(spacing: 16) {
-                Text("One-tap magic for perfect photos")
+                Text("Your Anime Journey Begins")
                     .font(.title2)
                     .fontWeight(.semibold)
                     .multilineTextAlignment(.center)
                 
-                Text("Our advanced AI instantly detects and erases unwanted watermarks while preserving the original quality of your precious memories.")
+                Text("Experience the magic of AI-powered anime transformations with multiple unique styles to choose from.")
                     .font(.body)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
@@ -177,6 +189,29 @@ struct SecondOnboardingScreen: View {
             if count >= 10 {
                 timer.invalidate()
             }
+        }
+    }
+}
+
+struct StyleExample: View {
+    let name: String
+    let imageName: String
+    
+    var body: some View {
+        VStack {
+            Image(imageName)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 80, height: 80)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                )
+            
+            Text(name)
+                .font(.caption)
+                .foregroundColor(.white)
         }
     }
 }
