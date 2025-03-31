@@ -66,6 +66,15 @@ export class GeminiService {
 				statusText: response.statusText,
 				error: errorText
 			});
+			console.log(response.status);
+
+			// For rate limit errors (HTTP 429)
+			if (response.status === 429) {
+				const rateLimitError = new Error('Gemini API rate limit exceeded');
+				rateLimitError.name = 'GeminiRateLimitError'; // Changed name to be more specific
+				throw rateLimitError;
+			}
+
 			throw new Error(`Failed to process image: ${response.status} ${response.statusText}`);
 		}
 

@@ -21,6 +21,7 @@ export interface Env {
 	OPENAI_API_KEY: string;
 	// Gemini API key for image processing
 	GOOGLE_API_KEY: string;
+	GOOGLE_API_KEY_2: string;
 	UPSTASH_REDIS_REST_TOKEN: string;
 }
 
@@ -63,8 +64,8 @@ export async function processQueue(batch: MessageBatch<QueueMessage>, env: Env):
 			const prompt = generatePrompt(message.body.styleID, imageContext);
 			console.log(`Using prompt: ${prompt.substring(0, 100)}...`);
 
-			// Create Gemini service for image processing
-			const geminiService = createGeminiService(env.GOOGLE_API_KEY);
+			// Create Gemini service for image processing use random api key
+			const geminiService = createGeminiService(Math.round(Math.random()) ? env.GOOGLE_API_KEY : env.GOOGLE_API_KEY_2);
 
 			// Process the image with Gemini
 			console.log('Processing image with Gemini...');
@@ -73,14 +74,6 @@ export async function processQueue(batch: MessageBatch<QueueMessage>, env: Env):
 				message.body.image.mime_type,
 				prompt
 			);
-			//call gemini 10 times to simulate a rate limit error
-			for (let i = 0; i < 11; i++) {
-				await geminiService.processImage(
-					imageData,
-					message.body.image.mime_type,
-					prompt
-				);
-			}
 			// Store the processed image in R2
 			const processedImageKey = `processed/${message.body.requestId}.png`;
 			await env.IMAGES.put(processedImageKey, processedImageData, {
@@ -92,20 +85,19 @@ export async function processQueue(batch: MessageBatch<QueueMessage>, env: Env):
 			// Update state to completed
 			await redis.set(message.body.requestId, "completed");
 
-			console.log(`Processed request ${message.body.requestId}`);
-			console.log(`Original image size: ${imageData.byteLength} bytes`);
-			console.log(`Processed image size: ${processedImageData.byteLength} bytes`);
-
 			// Acknowledge the message after successful processing
 			message.ack();
 		} catch (error) {
 			console.error(`Error processing message ${message.body.requestId}:`, error);
 
-			// Check if this is a rate limit error
-			if (error instanceof Error && error.name === 'RateLimitError') {
-				console.log(`Rate limit hit for request ${message.body.requestId}, retrying...`);
-				// Don't acknowledge the message - this will cause it to be retried with backoff
-				continue;
+			// Check if this is a rate limit error from Gemini
+			if (error instanceof Error && (
+				error.name === 'GeminiRateLimitError' ||
+				(error.message && error.message.includes('429'))
+			)) {
+				console.log(`Rate limit hit for request ${message.body.requestId}, will retry automatically`);
+				// Don't acknowledge the message - this will cause it to be retried
+				return; // Exit the function without acknowledging
 			}
 
 			// For other errors, mark as failed and acknowledge

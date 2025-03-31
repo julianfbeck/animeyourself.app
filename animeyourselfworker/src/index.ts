@@ -56,6 +56,7 @@ export interface Env {
 	OPENAI_API_KEY: string;
 	UPSTASH_REDIS_REST_TOKEN: string;
 	GOOGLE_API_KEY: string;
+	GOOGLE_API_KEY_2: string;
 }
 
 export default {
