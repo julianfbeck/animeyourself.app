@@ -40,7 +40,6 @@ class AnimeViewModel: ObservableObject {
         showConfetti = false
         processingStatus = "queued"
         selectedStyle = style
-        navigateToResult = true
         
         Task {
             do {

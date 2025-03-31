@@ -175,7 +175,7 @@ struct ResultView: View {
                             }
                             
                             // Style badge
-                            Text(model.selectedStyle)
+                            Text("Your Anime Style")
                                 .font(.system(.subheadline, design: .rounded, weight: .medium))
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 8)
@@ -273,6 +273,7 @@ struct ResultView: View {
                                         if retryCount < 3 {
                                             retryCount += 1
                                             model.errorMessage = nil
+                                            model.navigateToResult = false
                                             
                                             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                                                 if !globalViewModel.isPro {
