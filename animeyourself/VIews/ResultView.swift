@@ -47,6 +47,8 @@ struct ResultView: View {
                             .font(.system(size: 24, weight: .semibold))
                             .foregroundColor(.white)
                     }
+                    .disabled(model.isProcessing)
+                    .opacity(model.isProcessing ? 0.5 : 1)
                     
                     Spacer()
                     
