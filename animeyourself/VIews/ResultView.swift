@@ -236,24 +236,43 @@ struct ResultView: View {
                         // Error State
                         else if let errorMessage = model.errorMessage {
                             VStack(spacing: 20) {
-                                Image(systemName: "xmark.circle.fill")
-                                    .font(.system(size: 60))
-                                    .foregroundColor(.red)
-                                
-                                Text("Something Went Wrong")
-                                    .font(.system(.title2, design: .rounded, weight: .bold))
-                                    .foregroundColor(.white)
-                                
-                                Text(errorMessage)
-                                    .font(.system(.body, design: .rounded))
-                                    .multilineTextAlignment(.center)
-                                    .foregroundColor(.white.opacity(0.8))
-                                    .padding(.horizontal)
+                                if let originalImage = model.selectedImage {
+                                    Image(uiImage: originalImage)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .cornerRadius(16)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 16)
+                                                .stroke(Color.red.opacity(0.5), lineWidth: 1.5)
+                                        )
+                                        .frame(maxWidth: UIScreen.main.bounds.width * 0.8)
+                                        .frame(maxHeight: UIScreen.main.bounds.height * 0.5)
+                                }
+
+                                VStack(spacing: 16) {
+                                    Image(systemName: "exclamationmark.circle.fill")
+                                        .font(.system(size: 40))
+                                        .foregroundColor(.red)
+                                    
+                                    Text("Generation Failed")
+                                        .font(.system(.title3, design: .rounded, weight: .bold))
+                                        .foregroundColor(.white)
+                                    
+                                    Text(errorMessage)
+                                        .font(.system(.body, design: .rounded))
+                                        .multilineTextAlignment(.center)
+                                        .foregroundColor(.white.opacity(0.8))
+                                        .padding(.horizontal)
+                                }
+                                .padding()
+                                .background(.ultraThinMaterial)
+                                .cornerRadius(16)
                                 
                                 HStack(spacing: 16) {
                                     Button {
                                         if retryCount < 3 {
                                             retryCount += 1
+                                            model.errorMessage = nil
                                             
                                             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                                                 if !globalViewModel.isPro {
@@ -268,7 +287,7 @@ struct ResultView: View {
                                     } label: {
                                         HStack {
                                             Image(systemName: "arrow.clockwise")
-                                            Text(retryCount >= 3 ? "Retry Limit Reached" : "Try Again")
+                                            Text(retryCount >= 3 ? "Retry Limit Reached" : "Free Retry")
                                         }
                                         .font(.system(.body, design: .rounded, weight: .medium))
                                         .frame(maxWidth: .infinity)
@@ -287,7 +306,7 @@ struct ResultView: View {
                                     } label: {
                                         HStack {
                                             Image(systemName: "arrow.triangle.2.circlepath")
-                                            Text("Reset")
+                                            Text("Start Over")
                                         }
                                         .font(.system(.body, design: .rounded, weight: .medium))
                                         .frame(maxWidth: .infinity)
@@ -371,6 +390,8 @@ struct ResultView: View {
             return "Creating anime portrait..."
         case "completed":
             return "Completed! Finishing up..."
+        case "failed":
+            return "Generation failed. Please try again."
         default:
             return "Creating anime portrait..."
         }

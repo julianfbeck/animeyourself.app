@@ -182,8 +182,6 @@ class AnimeViewModel: ObservableObject {
                                         print("Processing status: \(status)")
                                         
                                         if status == "completed" {
-                                            
-                                            
                                             // If completed, check for image URL
                                             if let imageUrl = dataDict["url"] as? String {
                                                 self.logger.info("Image URL found: \(imageUrl)")
@@ -206,10 +204,45 @@ class AnimeViewModel: ObservableObject {
                                                     Plausible.shared.trackEvent(event: "anime_transform_success", path: "/transform/success", properties: ["style": self.selectedStyle])
                                                     return
                                                 } else {
-                                                    self.logger.error("No image URL found in response")
-                                                    throw NSError(domain: "AnimeYourself", code: 10, userInfo: [NSLocalizedDescriptionKey: "Image URL not found in response"])
+                                                    print("status failed")
+                                                    self.logger.error("Image processing failed")
+                                                    Plausible.shared.trackEvent(event: "anime_transform_failed", path: "/transform/error")
+                                                    self.isProcessing = false
+                                                    self.errorMessage = "Image processing failed. Please try again."
+                                                    self.processingStatus = "failed"
+                                                    return  
                                                 }
                                             }
+                                        } else if status == "failed" {
+                                            print("status failed")
+                                            self.logger.error("Image processing failed")
+                                            Plausible.shared.trackEvent(event: "anime_transform_failed", path: "/transform/error")
+                                            self.isProcessing = false
+                                            self.errorMessage = "Image processing failed. Please try again."
+                                            self.processingStatus = "failed"
+                                            return
+                                        } else if let state = responseDict["state"] as? String {
+                                            // Fallback for old API format
+                                            self.processingStatus = state
+                                            self.logger.info("Using legacy state field: \(state)")
+                                            
+                                            if state == "completed" {
+                                                let loadedImage = try await fetchCompletedImage(requestId: requestId)
+                                                print("Legacy image loaded: \(loadedImage.size)")
+                                                self.processedImage = loadedImage
+                                                self.showConfetti = true
+                                                Plausible.shared.trackEvent(event: "anime_transform_success", path: "/transform/success", properties: ["style": self.selectedStyle])
+                                                return
+                                            } else if state == "failed" {
+                                                self.logger.error("Image processing failed")
+                                                Plausible.shared.trackEvent(event: "anime_transform_failed", path: "/transform/error")
+                                                self.isProcessing = false
+                                                self.errorMessage = "Image processing failed. Please try again."
+                                                self.processingStatus = "failed"
+                                                return
+                                            }
+                                        } else {
+                                            self.logger.warning("No data object or state field found in response")
                                         }
                                     } else {
                                         self.logger.warning("Status field not found in data dictionary")
@@ -226,6 +259,13 @@ class AnimeViewModel: ObservableObject {
                                         self.showConfetti = true
                                         Plausible.shared.trackEvent(event: "anime_transform_success", path: "/transform/success", properties: ["style": self.selectedStyle])
                                         return
+                                    } else if state == "failed" {
+                                        self.logger.error("Image processing failed")
+                                        Plausible.shared.trackEvent(event: "anime_transform_failed", path: "/transform/error")
+                                        self.isProcessing = false
+                                        self.errorMessage = "Image processing failed. Please try again."
+                                        self.processingStatus = "failed"
+                                        return
                                     }
                                 } else {
                                     self.logger.warning("No data object or state field found in response")
@@ -236,6 +276,10 @@ class AnimeViewModel: ObservableObject {
                         }
                     } catch {
                         self.logger.error("JSON parsing error: \(error.localizedDescription)")
+                        if self.errorMessage != nil {
+                            self.isProcessing = false
+                            return
+                        }
                     }
                 } else if httpResponse.statusCode == 404 {
                     // Request ID not found
@@ -250,7 +294,11 @@ class AnimeViewModel: ObservableObject {
                 try await Task.sleep(nanoseconds: 3_000_000_000) // 3 seconds
             } catch {
                 self.logger.error("Error during status check: \(error.localizedDescription)")
-                throw error
+                self.isProcessing = false
+                if self.errorMessage == nil {
+                    self.errorMessage = "Image processing failed. Please try again."
+                }
+                return
             }
         }
         
