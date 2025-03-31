@@ -222,7 +222,7 @@ struct ResultView: View {
                                 .padding(.vertical, 16)
                                 .background(
                                     RoundedRectangle(cornerRadius: 25)
-                                        .fill(Color.purple.opacity(0.7))
+                                        .fill(Color.red.opacity(0.7))
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 25)
                                                 .stroke(Color.white.opacity(0.3), lineWidth: 1)
@@ -277,6 +277,7 @@ struct ResultView: View {
                                             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                                                 if !globalViewModel.isPro {
                                                     globalViewModel.isShowingPayWall = true
+                                                    return
                                                 }
                                             }
                                             
