@@ -73,46 +73,6 @@ struct AnimeYourselfView: View {
                         
                         if model.isProcessing {
                             processingView
-                        } else if let _ = model.processedImage {
-                            // Display View Result button with Reset button inline
-                            HStack(spacing: 15) {
-                                NavigationLink(destination: ResultView().environmentObject(model)) {
-                                    HStack(spacing: 10) {
-                                        Image(systemName: "eye")
-                                            .font(.system(size: 18))
-                                        Text("View Result")
-                                            .font(.system(.body, design: .rounded, weight: .medium))
-                                    }
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 16)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 25)
-                                            .fill(Color.accentColor)
-                                    )
-                                    .foregroundColor(.white)
-                                }
-                                .shadow(radius: 4, x: 0, y: 2)
-                                
-                                Button {
-                                    model.clearImages()
-                                    photoPickerItem = nil
-                                } label: {
-                                    HStack(spacing: 10) {
-                                        Image(systemName: "photo")
-                                            .font(.system(size: 18))
-                                        Text("New Image")
-                                            .font(.system(.body, design: .rounded, weight: .medium))
-                                    }
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 16)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 25)
-                                            .fill(Color.black.opacity(0.4))
-                                    )
-                                    .foregroundColor(.white)
-                                }
-                                .shadow(radius: 4, x: 0, y: 2)
-                            }
                         }
                         
                         // Add a programmatic navigation link
@@ -222,73 +182,113 @@ struct AnimeYourselfView: View {
                 }
                 .padding(.top, 8)
                 
-                // Transform button
-                Button {
-                    if !self.globalViewModel.isPro && globalViewModel.remainingUses <= 0 {
-                       self.globalViewModel.isShowingPayWall = true
-                        return
-                    }
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        if !globalViewModel.isPro {
-                            globalViewModel.isShowingPayWall = true
-                        }
-                    }
-                        
-                    if let image = model.selectedImage {
-                        model.processImage(image, style: model.selectedStyle)
-                        globalViewModel.useFeature()
-                        model.navigateToResult = true
-                        
-                        // Reset photoPickerItem after a slight delay
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            photoPickerItem = nil
-                        }
-                    }
-                } label: {
-                    HStack(spacing: 10) {
-                        Image(systemName: globalViewModel.remainingUses > 0 || globalViewModel.isPro ? "wand.and.stars":"checkmark.seal")
-                            .font(.system(size: 18))
-                        Text(globalViewModel.remainingUses > 0 || globalViewModel.isPro ? "Transform to Anime" : "Unlimited Access")
-                            .font(.system(.body, design: .rounded, weight: .medium))
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 25)
-                            .fill(Color.accentColor)
-                    )
-                    .foregroundColor(.white)
-                }
-                .shadow(radius: 4, x: 0, y: 2)
-                .padding(.top, 12)
-                
-                // New Image button
-                Button {
-                    model.clearImages()
-                    photoPickerItem = nil
-                    showImagePicker = true
-                } label: {
-                    HStack(spacing: 10) {
-                        Image(systemName: "photo.stack")
-                            .font(.system(size: 18))
-                        Text("New Image")
-                            .font(.system(.body, design: .rounded, weight: .medium))
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 25)
-                            .fill(Color.black.opacity(0.4))
-                            .overlay(
+                if let _ = model.processedImage {
+                    // Display View Result and New Image buttons inline
+                    HStack(spacing: 15) {
+                        NavigationLink(destination: ResultView().environmentObject(model)) {
+                            HStack(spacing: 10) {
+                                Image(systemName: "eye")
+                                    .font(.system(size: 18))
+                                Text("View Result")
+                                    .font(.system(.body, design: .rounded, weight: .medium))
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                            .background(
                                 RoundedRectangle(cornerRadius: 25)
-                                    .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                                    .fill(Color.accentColor)
                             )
-                    )
-                    .foregroundColor(.white)
+                            .foregroundColor(.white)
+                        }
+                        .shadow(radius: 4, x: 0, y: 2)
+                        
+                        Button {
+                            model.clearImages()
+                            photoPickerItem = nil
+                            showImagePicker = true
+                        } label: {
+                            HStack(spacing: 10) {
+                                Image(systemName: "photo")
+                                    .font(.system(size: 18))
+                                Text("New Image")
+                                    .font(.system(.body, design: .rounded, weight: .medium))
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                            .background(
+                                RoundedRectangle(cornerRadius: 25)
+                                    .fill(Color.black.opacity(0.4))
+                            )
+                            .foregroundColor(.white)
+                        }
+                        .shadow(radius: 4, x: 0, y: 2)
+                    }
+                    .padding(.top, 20)
+                } else {
+                    // Transform button
+                    HStack(spacing: 15) {
+                        Button {
+                            if !self.globalViewModel.isPro && globalViewModel.remainingUses <= 0 {
+                               self.globalViewModel.isShowingPayWall = true
+                                return
+                            }
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                if !globalViewModel.isPro {
+                                    globalViewModel.isShowingPayWall = true
+                                }
+                            }
+                                
+                            if let image = model.selectedImage {
+                                model.processImage(image, style: model.selectedStyle)
+                                globalViewModel.useFeature()
+                                model.navigateToResult = true
+                                
+                                // Reset photoPickerItem after a slight delay
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                    photoPickerItem = nil
+                                }
+                            }
+                        } label: {
+                            HStack(spacing: 10) {
+                                Image(systemName: globalViewModel.remainingUses > 0 || globalViewModel.isPro ? "wand.and.stars":"checkmark.seal")
+                                    .font(.system(size: 18))
+                                Text(globalViewModel.remainingUses > 0 || globalViewModel.isPro ? "Transform" : "Unlock")
+                                    .font(.system(.body, design: .rounded, weight: .medium))
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                            .background(
+                                RoundedRectangle(cornerRadius: 25)
+                                    .fill(Color.accentColor)
+                            )
+                            .foregroundColor(.white)
+                        }
+                        .shadow(radius: 4, x: 0, y: 2)
+                        
+                        Button {
+                            model.clearImages()
+                            photoPickerItem = nil
+                            showImagePicker = true
+                        } label: {
+                            HStack(spacing: 10) {
+                                Image(systemName: "photo")
+                                    .font(.system(size: 18))
+                                Text("New Image")
+                                    .font(.system(.body, design: .rounded, weight: .medium))
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                            .background(
+                                RoundedRectangle(cornerRadius: 25)
+                                    .fill(Color.black.opacity(0.4))
+                            )
+                            .foregroundColor(.white)
+                        }
+                        .shadow(radius: 4, x: 0, y: 2)
+                    }
+                    .padding(.top, 12)
                 }
-                .shadow(radius: 4, x: 0, y: 2)
-                .padding(.top, 8)
             } else {
                 VStack(spacing: 20) {
                     selectImageButton
