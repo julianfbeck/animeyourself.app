@@ -183,13 +183,35 @@ struct AnimeYourselfView: View {
                 .padding(.top, 8)
                 
                 if let _ = model.processedImage {
-                    // Display View Result and New Image buttons inline
+                    // Display Transform and New Image buttons
                     HStack(spacing: 15) {
-                        NavigationLink(destination: ResultView().environmentObject(model)) {
+                        Button {
+                            if !self.globalViewModel.isPro && globalViewModel.remainingUses <= 0 {
+                               self.globalViewModel.isShowingPayWall = true
+                                return
+                            }
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                if !globalViewModel.isPro {
+                                    globalViewModel.isShowingPayWall = true
+                                }
+                            }
+                                
+                            if let image = model.selectedImage {
+                                model.processImage(image, style: model.selectedStyle)
+                                globalViewModel.useFeature()
+                                model.navigateToResult = true
+                                
+                                // Reset photoPickerItem after a slight delay
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                    photoPickerItem = nil
+                                }
+                            }
+                        } label: {
                             HStack(spacing: 10) {
-                                Image(systemName: "eye")
+                                Image(systemName: globalViewModel.remainingUses > 0 || globalViewModel.isPro ? "wand.and.stars":"checkmark.seal")
                                     .font(.system(size: 18))
-                                Text("View Result")
+                                Text(globalViewModel.remainingUses > 0 || globalViewModel.isPro ? "Transform" : "Unlock")
                                     .font(.system(.body, design: .rounded, weight: .medium))
                             }
                             .frame(maxWidth: .infinity)
@@ -224,8 +246,27 @@ struct AnimeYourselfView: View {
                         .shadow(radius: 4, x: 0, y: 2)
                     }
                     .padding(.top, 20)
+                    
+                    // View Result button below
+                    NavigationLink(destination: ResultView().environmentObject(model)) {
+                        HStack(spacing: 10) {
+                            Image(systemName: "eye")
+                                .font(.system(size: 18))
+                            Text("View Result")
+                                .font(.system(.body, design: .rounded, weight: .medium))
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 25)
+                                .fill(Color.accentColor.opacity(0.8))
+                        )
+                        .foregroundColor(.white)
+                    }
+                    .shadow(radius: 4, x: 0, y: 2)
+                    .padding(.top, 12)
                 } else {
-                    // Transform button
+                    // Transform and New Image buttons
                     HStack(spacing: 15) {
                         Button {
                             if !self.globalViewModel.isPro && globalViewModel.remainingUses <= 0 {
