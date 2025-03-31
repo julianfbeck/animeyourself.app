@@ -122,7 +122,7 @@ export default {
 
 				// If processing is completed
 				if (state === "completed") {
-					const processedImageKey = `processed/${requestId}`;
+					const processedImageKey = `processed/${requestId}.png`;
 					const processedImage = await env.IMAGES.get(processedImageKey);
 
 					if (!processedImage) {
@@ -137,8 +137,10 @@ export default {
 					}
 
 					// Generate image URL
-					const imageUrl = `https://gemini.app.juli.sh/${requestId}.png`;
+					const imageUrl = `https://gemini.app.juli.sh/processed/${requestId}.png`;
 
+					console.log(imageUrl);
+					console.log("Successfully generated image URL for requestId: ", requestId);
 					// Return the processed image data
 					return new Response(JSON.stringify({
 						success: true,

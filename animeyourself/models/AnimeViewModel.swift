@@ -186,7 +186,7 @@ class AnimeViewModel: ObservableObject {
                     do {
                         // Try to parse as dictionary first
                         if let responseDict = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
-                            // Check for success flag
+                            print(responseDict)
                             if let success = responseDict["success"] as? Bool, success {
                                 // Check for data object
                                 if let dataDict = responseDict["data"] as? [String: Any] {
@@ -196,6 +196,8 @@ class AnimeViewModel: ObservableObject {
                                         self.logger.info("Processing status: \(status)")
                                         
                                         if status == "completed" {
+                                            
+                                            
                                             // If completed, check for image URL
                                             if let imageUrl = dataDict["url"] as? String {
                                                 self.logger.info("Image URL found: \(imageUrl)")
