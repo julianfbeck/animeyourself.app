@@ -24,7 +24,7 @@ export class OpenAIService {
 			const base64Image = this.arrayBufferToBase64(imageData);
 
 			const response = await this.client.chat.completions.create({
-				model: "gpt-4o-mini",
+				model: "gpt-4o",
 				messages: [
 					{
 						role: "system",
@@ -33,7 +33,7 @@ export class OpenAIService {
 					{
 						role: "user",
 						content: [
-							{ type: "text", text: "Describe this image in a single flowing paragraph, focusing on the people (their appearance, expressions, poses, and clothing) and the setting they're in. Include relevant background details that set the scene." },
+							{ type: "text", text: "Describe this image in a single flowing paragraph, focusing on the people (their appearance, expressions, poses, and clothing) and the setting they're in. Include relevant background details that set the scene. Facial expressions are important." },
 							{
 								type: "image_url",
 								image_url: {

@@ -42,7 +42,7 @@ struct ThirdOnboardingScreen: View {
                             }
                             // Haptic feedback
                             UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                        }
+                        }.padding(.top,3)
                     }
                 }
                 .padding(.horizontal, 20)

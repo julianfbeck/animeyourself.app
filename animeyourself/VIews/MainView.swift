@@ -19,6 +19,8 @@ struct MainView: View {
                     .fullScreenCover(isPresented: $globalViewModel.isShowingPayWall) {
                         PayWallView()
                     }
+                //alwas make dark mode
+                .preferredColorScheme(.dark)
             }
         }
     }

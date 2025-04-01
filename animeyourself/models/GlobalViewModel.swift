@@ -36,7 +36,7 @@ class GlobalViewModel: ObservableObject {
     
     @Published var canUseForFree: Bool
     
-    private let maxUsageCount: Int = 1000
+    private let maxUsageCount: Int = 2
     private let featureKey = "finalUsageCountforReal"
     
     // Track if this is the first launch
@@ -58,9 +58,7 @@ class GlobalViewModel: ObservableObject {
         
         setupPurchases()
         fetchOfferings()
-        // testing
-//        self.isPro = true
-        //testing 
+
         
         if !self.isPro && !self.isShowingOnboarding && !self.isFirstLaunch {
             self.isShowingPayWall = true

@@ -121,8 +121,6 @@ struct SecondOnboardingScreen: View {
                 animationPhase = 2
             }
             
-            // Apply haptic feedback during shaking
-            applyShakingHaptics()
             
             // After 2 seconds of shaking, show the clean image
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
@@ -179,18 +177,7 @@ struct SecondOnboardingScreen: View {
         }
     }
     
-    func applyShakingHaptics() {
-        // Create a timer for haptic pulses during shaking
-        var count = 0
-        let timer = Timer.scheduledTimer(withTimeInterval: 0.15, repeats: true) { timer in
-            count += 1
-            impactFeedback.impactOccurred(intensity: 0.7)
-            
-            if count >= 10 {
-                timer.invalidate()
-            }
-        }
-    }
+    
 }
 
 struct StyleExample: View {

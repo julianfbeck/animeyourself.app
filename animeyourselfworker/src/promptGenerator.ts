@@ -3,18 +3,18 @@
  */
 
 interface StyleConfig {
-	styleID: string;
-	name: string;
-	prompt: string;
-	styleJson: string;
+  styleID: string;
+  name: string;
+  prompt: string;
+  styleJson: string;
 }
 
 const STYLES: Record<string, StyleConfig> = {
-	"anime-default-001": {
-		styleID: "anime-default-001",
-		name: "Anime Default",
-		prompt: "turn this into a cinematic anime style animation",
-		styleJson: `{
+  "anime-default-001": {
+    styleID: "anime-default-001",
+    name: "Anime Default",
+    prompt: "turn this into a cinematic anime style animation",
+    styleJson: `{
   "reference": {
     "color_composition": {
       "palette": "Warm, earthy tones (e.g., browns, forest greens, navy, soft reds)",
@@ -54,12 +54,12 @@ const STYLES: Record<string, StyleConfig> = {
     "context": CONTEXT_PLACEHOLDER
   }
 }`
-	},
-	"ghibli-inspired-002": {
-		styleID: "ghibli-inspired-002",
-		name: "Studio Ghibli",
-		prompt: "transform this into a Studio Ghibli style character with soft, natural features and watercolor-like qualities",
-		styleJson: `{
+  },
+  "ghibli-inspired-002": {
+    styleID: "ghibli-inspired-002",
+    name: "Studio Ghibli",
+    prompt: "transform this into a Studio Ghibli style character with soft, natural features and watercolor-like qualities",
+    styleJson: `{
   "reference": {
     "color_composition": {
       "palette": "Watercolor-inspired pastels with rich natural greens, blues, and earthy tones",
@@ -99,12 +99,12 @@ const STYLES: Record<string, StyleConfig> = {
     "context": CONTEXT_PLACEHOLDER
   }
 }`
-	},
-	"onepiece-007": {
-		styleID: "onepiece-007",
-		name: "One Piece Style",
-		prompt: "turn this into a cinematic anime style animation",
-		styleJson: `{
+  },
+  "onepiece-007": {
+    styleID: "onepiece-007",
+    name: "One Piece Style",
+    prompt: "turn this into a cinematic anime style animation",
+    styleJson: `{
   "reference": {
     "color_composition": {
       "palette": "Bold, vibrant colors with high saturation (blues, reds, yellows, greens)",
@@ -144,12 +144,12 @@ const STYLES: Record<string, StyleConfig> = {
     "context": CONTEXT_PLACEHOLDER
   }
 }`
-	},
-	"naruto-009": {
-		styleID: "naruto-009",
-		name: "Naruto Style",
-		prompt: "turn this into a cinematic anime style animation",
-		styleJson: `{
+  },
+  "naruto-009": {
+    styleID: "naruto-009",
+    name: "Naruto Style",
+    prompt: "turn this into a cinematic anime style animation",
+    styleJson: `{
   "reference": {
     "color_composition": {
       "palette": "Earth tones with vibrant accents (oranges, blues, greens, reds)",
@@ -189,12 +189,12 @@ const STYLES: Record<string, StyleConfig> = {
     "context": CONTEXT_PLACEHOLDER
   }
 }`
-	},
-	"shonen-dynamic-005": {
-		styleID: "shonen-dynamic-005",
-		name: "Shonen Action",
-		prompt: "transform this into a dynamic shonen anime style character with heroic features and powerful battle poses",
-		styleJson: `{
+  },
+  "shonen-dynamic-005": {
+    styleID: "shonen-dynamic-005",
+    name: "Shonen Action",
+    prompt: "transform this into a dynamic shonen anime style character with heroic features and powerful battle poses",
+    styleJson: `{
   "reference": {
     "color_composition": {
       "palette": "Bold primary colors with high contrast (reds, blues, yellows)",
@@ -234,12 +234,12 @@ const STYLES: Record<string, StyleConfig> = {
     "context": CONTEXT_PLACEHOLDER
   }
 }`
-	},
-	"dragonball-008": {
-		styleID: "dragonball-008",
-		name: "Dragon Ball Z",
-		prompt: "turn this into a cinematic anime style animation",
-		styleJson: `{
+  },
+  "dragonball-008": {
+    styleID: "dragonball-008",
+    name: "Dragon Ball Z",
+    prompt: "turn this into a cinematic anime style animation",
+    styleJson: `{
   "reference": {
     "color_composition": {
       "palette": "Vibrant, high-contrast colors (orange-blue for protagonists, purple-pink for antagonists)",
@@ -279,12 +279,12 @@ const STYLES: Record<string, StyleConfig> = {
     "context": CONTEXT_PLACEHOLDER
   }
 }`
-	},
-	// Additional styles to be added later:
-	// "cyberpunk-anime-003"
-	// "chibi-kawaii-004"
-	// "shoujo-soft-006"
-	// "titan-dark-010"
+  },
+  // Additional styles to be added later:
+  // "cyberpunk-anime-003"
+  // "chibi-kawaii-004"
+  // "shoujo-soft-006"
+  // "titan-dark-010"
 };
 
 /**
@@ -295,15 +295,15 @@ const STYLES: Record<string, StyleConfig> = {
  * @returns The complete prompt with style JSON
  */
 export function generatePrompt(styleID: string, context: string): string {
-	const style = STYLES[styleID];
+  const style = STYLES[styleID];
 
-	if (!style) {
-		throw new Error(`Style ID ${styleID} not found`);
-	}
+  if (!style) {
+    throw new Error(`Style ID ${styleID} not found`);
+  }
 
-	// Replace the placeholder with the actual context
-	const styleJsonWithContext = style.styleJson.replace('CONTEXT_PLACEHOLDER', context);
+  // Replace the placeholder with the actual context
+  const styleJsonWithContext = style.styleJson.replace('CONTEXT_PLACEHOLDER', "");
 
-	return `${style.prompt}\n\n<style.json>\n${styleJsonWithContext}\n</style.json>`;
+  return `${style.prompt}\ ${context}\n\n<style.json>\n${styleJsonWithContext}\n</style.json>`;
 }
 

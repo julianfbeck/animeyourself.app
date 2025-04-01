@@ -19,8 +19,8 @@ struct AnimeYourselfView: View {
     
     // List of anime styles matching the IDs in the AnimeViewModel
     let animeStyles = [
-//        "anime-default-001",
-        "ghibli-inspired-002",
+        "anime-default-001",
+//        "ghibli-inspired-002",
 //        "cyberpunk-anime-003",
 //        "chibi-kawaii-004",
         "shonen-dynamic-005",
@@ -34,37 +34,6 @@ struct AnimeYourselfView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Background gradient with better contrast
-//                LinearGradient(
-//                    gradient: Gradient(colors: [
-//                        Color.black,
-//                        Color.black.opacity(0.9),
-//                        Color.accentColor.opacity(0.7)
-//                    ]),
-//                    startPoint: .top,
-//                    endPoint: .bottom
-//                )
-//                .ignoresSafeArea()
-                
-                // Single gradient orb in background
-//                GeometryReader { geometry in
-//                    Circle()
-//                        .fill(
-//                            LinearGradient(
-//                                gradient: Gradient(colors: [
-//                                    Color.accentColor.opacity(0.6),
-//                                    Color.purple.opacity(0.3)
-//                                ]),
-//                                startPoint: .topLeading,
-//                                endPoint: .bottomTrailing
-//                            )
-//                        )
-//                        .frame(width: geometry.size.width * 0.8)
-//                        .position(x: geometry.size.width * 0.5, y: geometry.size.height * 0.3)
-//                        .blur(radius: 60)
-//                }
-//                .ignoresSafeArea()
-                
                 // Main content
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 30) {
@@ -259,7 +228,7 @@ struct AnimeYourselfView: View {
                         .padding(.vertical, 16)
                         .background(
                             RoundedRectangle(cornerRadius: 25)
-                                .fill(Color.accentColor.opacity(0.8))
+                                .fill(Color.accentColor)
                         )
                         .foregroundColor(.white)
                     }
@@ -323,6 +292,11 @@ struct AnimeYourselfView: View {
                             .background(
                                 RoundedRectangle(cornerRadius: 25)
                                     .fill(Color.black.opacity(0.4))
+                            )
+                            // add accetn border
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 25)
+                                    .stroke(Color.accentColor, lineWidth: 1)
                             )
                             .foregroundColor(.white)
                         }
