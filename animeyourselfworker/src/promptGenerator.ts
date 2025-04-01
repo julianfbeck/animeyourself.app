@@ -47,58 +47,54 @@ const STYLES: Record<string, StyleConfig> = {
       "emotion": "Slight blush or line detail to show warmth or embarrassment"
     },
     "backgrounds": {
-      "style": "Semi-realistic, soft-focus painting",
-      "depth": "Atmospheric perspective with lighter/bluer distant elements",
-      "interiors": "Warm, inviting, natural materials, soft lighting"
-    },
-    "context": CONTEXT_PLACEHOLDER
+      "style": "Use the backgroudn provide in the context and image above to create a background that is a good fit for the image",
+    }
   }
 }`
   },
   "ghibli-inspired-002": {
     styleID: "ghibli-inspired-002",
     name: "Studio Ghibli",
-    prompt: "transform this into a Studio Ghibli style character with soft, natural features and watercolor-like qualities",
+    prompt: "turn this into a cinematic anime style animation",
     styleJson: `{
-  "reference": {
-    "color_composition": {
-      "palette": "Watercolor-inspired pastels with rich natural greens, blues, and earthy tones",
-      "backgrounds": "Hand-painted detailed environments with atmospheric depth and texture",
-      "skin_tones": "Warm, natural with subtle blush and gentle shadowing",
-      "lighting": "Soft, diffuse natural light with golden hours and gentle lens flares",
-      "color_grading": "Slightly desaturated with emphasis on atmosphere over contrast"
-    },
-    "line_art": {
-      "outline": "Delicate, varying thickness with hand-drawn quality",
-      "style": "Organic flowing lines that emphasize natural movement",
-      "shading": "Soft watercolor-like gradients with minimal hard shadows"
-    },
-    "character_design": {
-      "eyes": "Large but realistic with detailed irises and subtle reflections",
-      "eyebrows": "Expressive, naturally shaped with fine detail",
-      "mouths": "Simple but emotionally expressive, often in subtle ways",
-      "noses": "Defined but not emphasized, with realistic proportions",
-      "hair": "Detailed individual strands that move naturally with wind and motion",
-      "proportions": "Realistic child or adult proportions with natural movement"
-    },
-    "clothing_textures": {
-      "folds": "Detailed fabric movement with realistic physics and weight",
-      "materials": "Textured natural fabrics with visible weave and worn qualities",
-      "accessories": "Detailed practical items with weathered, lived-in quality"
-    },
-    "animation_quirks": {
-      "expression": "Quiet contemplative moments, characters observing nature",
-      "moments": "Wind blowing through grass, clouds moving, food being prepared",
-      "emotion": "Subtle facial expressions conveying complex emotions"
-    },
-    "backgrounds": {
-      "style": "Meticulously detailed environments with rich textural elements",
-      "depth": "Layered backgrounds creating immersive sense of place",
-      "interiors": "Lived-in spaces with personal items and domestic details"
-    },
-    "context": CONTEXT_PLACEHOLDER
-  }
-}`
+    "reference": {
+      "color_composition": {
+        "palette": "Soft, pastel-dominant with vibrant accents for focal points",
+        "technique": "Watercolor-inspired with visible brushstrokes and color blending",
+        "lighting": "Natural, diffused light with gentle shadows and atmospheric perspective",
+        "gradients": "Subtle sky transitions from horizon to zenith with atmospheric depth",
+        "emphasis": "Rich saturation for story-important elements against softer backgrounds"
+      },
+      "line_art": {
+        "quality": "Clean, confident linework with hand-drawn feel and varied weight",
+        "outlines": "Strong for foreground characters, fading in backgrounds, absent in distant objects",
+        "detail": "Economical approach with detailed focal points and simplified surroundings",
+        "technique": "Ink-like definition for characters with softer edges for environmental elements",
+        "consistency": "Precise linework for characters with looser, more painterly approach to backgrounds"
+      },
+      "character_design": {
+        "faces": "Simplified yet expressive features with distinctive large eyes and minimalist noses",
+        "proportions": "Realistic body ratios with slightly enlarged heads for younger characters",
+        "expressions": "Subtle eye movements and mouth shapes conveying complex emotions",
+        "hair": "Flowing, grouped strands with movement-sensitive animation and minimal individual lines",
+        "silhouettes": "Distinctive, recognizable character shapes even at distance or in shadow"
+      },
+      "clothing_textures": {
+        "folds": "Natural cloth physics with weight-appropriate draping and movement",
+        "fabrics": "Textural hints rather than detailed patterns, favoring solid colors with subtle variations",
+        "animation": "Responsive to movement, wind and character actions with believable physics",
+        "details": "Selective embellishments only where story-significant or character-defining",
+        "style": "Mix of traditional and fantastical elements with practical design considerations"
+      },
+      "animation_quirks": {
+        "movement": "Weight-appropriate physics with naturalistic timing and thoughtful pauses",
+        "effects": "Hand-painted rain, wind patterns in grass, and individually animated falling leaves",
+        "transitions": "Lingering establishing shots followed by intimate character moments",
+        "pacing": "Animated holds and micro-movements during quiet scenes, fluid action during dynamic sequences",
+        "emphasis": "Attention to small details like food steam, dust motes, and water reflections"
+      },
+    }
+  }`
   },
   "onepiece-007": {
     styleID: "onepiece-007",
@@ -137,11 +133,8 @@ const STYLES: Record<string, StyleConfig> = {
       "emotion": "Exaggerated facial expressions with visual metaphors (hearts in eyes, steam from anger)"
     },
     "backgrounds": {
-      "style": "Fantastical environments with impossible geography",
-      "depth": "Strong foreground/background separation",
-      "interiors": "Detailed but stylized, emphasizing character over realism"
-    },
-    "context": CONTEXT_PLACEHOLDER
+      "style": "Use the backgroudn provide in the context and image above to create a background that is a good fit for the image",
+    }
   }
 }`
   },
@@ -182,18 +175,15 @@ const STYLES: Record<string, StyleConfig> = {
       "emotion": "Comical chibi-style for humor, veins/sweat drops for frustration"
     },
     "backgrounds": {
-      "style": "Blend of natural landscapes and Japanese-inspired architecture",
-      "depth": "Panoramic views of villages nestled in dramatic landscapes",
-      "interiors": "Sparse, traditional Japanese elements with ninja motifs"
-    },
-    "context": CONTEXT_PLACEHOLDER
+      "style": "Use the backgroudn provide in the context and image above to create a background that is a good fit for the image",
+    }
   }
 }`
   },
   "shonen-dynamic-005": {
     styleID: "shonen-dynamic-005",
     name: "Shonen Action",
-    prompt: "transform this into a dynamic shonen anime style character with heroic features and powerful battle poses",
+    prompt: "turn this into a cinematic anime style animation",
     styleJson: `{
   "reference": {
     "color_composition": {
@@ -226,12 +216,9 @@ const STYLES: Record<string, StyleConfig> = {
       "moments": "Mid-battle internal monologues, flashbacks to motivational memories",
       "emotion": "Visible battle auras, dramatic tears of determination, gritted teeth"
     },
-    "backgrounds": {
-      "style": "Varied settings from training grounds to tournament arenas to apocalyptic battlefields",
-      "depth": "Dramatic perspectives that emphasize the scale of conflicts",
-      "interiors": "Simple but functional spaces that highlight character interactions"
-    },
-    "context": CONTEXT_PLACEHOLDER
+   "backgrounds": {
+      "style": "Use the backgroudn provide in the context and image above to create a background that is a good fit for the image",
+    }
   }
 }`
   },
@@ -271,12 +258,9 @@ const STYLES: Record<string, StyleConfig> = {
       "moments": "Extended battle cries, world-shaking power demonstrations",
       "emotion": "Veins bulging during exertion, dramatic sweat, glowing eyes"
     },
-    "backgrounds": {
-      "style": "Otherworldly landscapes, martial arts arenas, destroyed battlefields",
-      "depth": "Focus on character actions with background detail varying by importance",
-      "interiors": "Simple but functional with futuristic technology"
-    },
-    "context": CONTEXT_PLACEHOLDER
+   "backgrounds": {
+      "style": "Use the backgroudn provide in the context and image above to create a background that is a good fit for the image",
+    }
   }
 }`
   },
@@ -301,9 +285,7 @@ export function generatePrompt(styleID: string, context: string): string {
     throw new Error(`Style ID ${styleID} not found`);
   }
 
-  // Replace the placeholder with the actual context
-  const styleJsonWithContext = style.styleJson.replace('CONTEXT_PLACEHOLDER', "");
-
-  return `${style.prompt}\ ${context}\n\n<style.json>\n${styleJsonWithContext}\n</style.json>`;
+  // Context is now above the prompt, followed by the prompt, then style JSON without context
+  return `${style.prompt}\n\n${context}\n\n<style>\n${style.styleJson}\n</style>`;
 }
 

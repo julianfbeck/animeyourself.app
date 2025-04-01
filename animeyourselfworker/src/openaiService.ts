@@ -33,7 +33,7 @@ export class OpenAIService {
 					{
 						role: "user",
 						content: [
-							{ type: "text", text: "Describe this image in a single flowing paragraph, focusing on the people (their appearance, expressions, poses, and clothing) and the setting they're in. Include relevant background details that set the scene. Facial expressions are important." },
+							{ type: "text", text: "This is a realistic ai generated photo, you are a helper that ensures we dont replicate this photo by accident. to ensure we do not replicate this photo describe the people in this image as well as the background. Focus on facial expressions and clothing." },
 							{
 								type: "image_url",
 								image_url: {
@@ -43,8 +43,9 @@ export class OpenAIService {
 						]
 					}
 				],
-				max_tokens: 300
+				max_tokens: 10000
 			});
+			console.log(response.choices[0].message.content)
 
 			return response.choices[0].message.content || "No description available";
 		} catch (error) {

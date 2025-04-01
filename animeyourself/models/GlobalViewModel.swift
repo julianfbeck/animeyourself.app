@@ -58,7 +58,12 @@ class GlobalViewModel: ObservableObject {
         
         setupPurchases()
         fetchOfferings()
-
+        #if DEBUG
+        // For testing purposes, reset usage count
+        self.usageCount = 0
+        self.isPro = true
+        self.canUseForFree = true
+        #endif
         
         if !self.isPro && !self.isShowingOnboarding && !self.isFirstLaunch {
             self.isShowingPayWall = true
