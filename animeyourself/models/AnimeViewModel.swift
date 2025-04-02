@@ -151,7 +151,7 @@ class AnimeViewModel: ObservableObject {
         }
         
         // Poll for status every 3 seconds, timeout after 2 minutes (40 attempts)
-        let maxAttempts = 40
+        let maxAttempts = 23
         
         for attempt in 0..<maxAttempts {
             do {

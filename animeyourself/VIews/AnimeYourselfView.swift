@@ -8,6 +8,7 @@
 
 import SwiftUI
 import PhotosUI
+import Vision
 
 struct AnimeYourselfView: View {
     @StateObject private var model = AnimeViewModel()
@@ -16,6 +17,7 @@ struct AnimeYourselfView: View {
     @State private var photoPickerItem: PhotosPickerItem?
     @State private var showImagePicker = false
     @State private var showSuccessAlert = false
+    @State private var showErrorAlert = false
     
     // List of anime styles matching the IDs in the AnimeViewModel
     let animeStyles = [
@@ -78,13 +80,29 @@ struct AnimeYourselfView: View {
                 Text("Your anime portrait has been saved to the photo library")
                     .font(.system(.body, design: .rounded))
             }
+            .alert("Person Detection Error", isPresented: $showErrorAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text(model.errorMessage ?? "No person detected in the image. This model only works with photos containing people.")
+                    .font(.system(.body, design: .rounded))
+            }
             .photosPicker(isPresented: $showImagePicker, selection: $photoPickerItem, matching: .images)
             .onChange(of: photoPickerItem) { newValue in
                 Task {
                     if let data = try? await newValue?.loadTransferable(type: Data.self),
                        let uiImage = UIImage(data: data) {
+                        // Check if the image contains a person
+                        let personDetected = await detectPerson(in: uiImage)
+                        
                         await MainActor.run {
-                            model.selectedImage = uiImage
+                            if personDetected {
+                                model.selectedImage = uiImage
+                                model.errorMessage = nil
+                            } else {
+                                model.errorMessage = "No person detected in the image. This model only works with photos containing people."
+                                showErrorAlert = true
+                                photoPickerItem = nil
+                            }
                         }
                     }
                 }
@@ -556,5 +574,49 @@ struct AnimeYourselfView: View {
     // Replace processingView with empty view since we don't need it anymore
     private var processingView: some View {
         EmptyView()
+    }
+    
+    // Person detection function
+    private func detectPerson(in image: UIImage) async -> Bool {
+        guard let cgImage = image.cgImage else { return false }
+        
+        let request = VNDetectHumanRectanglesRequest()
+        let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+        
+        do {
+            try handler.perform([request])
+            
+            if let results = request.results, !results.isEmpty {
+                return true
+            } else {
+                // Try face detection as a fallback
+                return await detectFace(in: image)
+            }
+        } catch {
+            print("Person detection failed: \(error.localizedDescription)")
+            // Try face detection as a fallback
+            return await detectFace(in: image)
+        }
+    }
+    
+    // Face detection as a fallback
+    private func detectFace(in image: UIImage) async -> Bool {
+        guard let cgImage = image.cgImage else { return false }
+        
+        let request = VNDetectFaceRectanglesRequest()
+        let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+        
+        do {
+            try handler.perform([request])
+            
+            if let results = request.results, !results.isEmpty {
+                return true
+            } else {
+                return false
+            }
+        } catch {
+            print("Face detection failed: \(error.localizedDescription)")
+            return false
+        }
     }
 }

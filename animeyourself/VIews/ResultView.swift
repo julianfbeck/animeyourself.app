@@ -351,8 +351,8 @@ struct ResultView: View {
                                     Button {
                                         if retryCount < 3 {
                                             retryCount += 1
-                                            model.errorMessage = nil
-                                            model.navigateToResult = false
+                                            self.globalViewModel.usageCount -= 1
+                                     
                                             
                                             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                                                 if !globalViewModel.isPro {
