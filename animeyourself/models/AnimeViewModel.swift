@@ -17,6 +17,7 @@ import RevenueCat
 class AnimeViewModel: ObservableObject {
     @Published var selectedImage: UIImage?
     @Published var processedImage: UIImage?
+    @Published var brandedShareImage: UIImage?
     @Published var isProcessing = false
     @Published var errorMessage: String?
     @Published var showResultView = false
@@ -62,6 +63,7 @@ class AnimeViewModel: ObservableObject {
     func clearImages() {
         selectedImage = nil
         processedImage = nil
+        brandedShareImage = nil
         errorMessage = nil
         showResultView = false
         navigateToResult = false

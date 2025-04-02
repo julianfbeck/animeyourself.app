@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ConfettiSwiftUI
+import UIKit
 
 struct ResultView: View {
     @Environment(\.dismiss) private var dismiss
@@ -14,7 +15,9 @@ struct ResultView: View {
     @EnvironmentObject private var model: AnimeViewModel
     @EnvironmentObject private var globalViewModel: GlobalViewModel
     
+    @StateObject private var shareModel = SharePreviewModel()
     @State private var showShareSheet = false
+    @State private var showSavedNotification = false
     @State private var confettiTrigger = 0
     @State private var rippleCounter = 0
     @State private var rippleOrigin: CGPoint = .zero
@@ -196,15 +199,52 @@ struct ResultView: View {
                                     icon: "square.and.arrow.down",
                                     backgroundColor: Color.accentColor
                                 ) {
-                                    saveImageToPhotoLibrary(processedImage)
+                                    if let processedImage = model.processedImage {
+                                        // Generate the branded share image
+                                        if let brandedImage = shareModel.generateSharePreview(originalImage: processedImage) {
+                                            // Save the branded image to photos
+                                            UIImageWriteToSavedPhotosAlbum(brandedImage, nil, nil, nil)
+                                            
+                                            // Show saved notification and track the event
+                                            shareModel.trackImageSaved()
+                                            
+                                            // Give haptic feedback
+                                            let generator = UINotificationFeedbackGenerator()
+                                            generator.notificationOccurred(.success)
+                                            
+                                            // Show saved notification
+                                            withAnimation {
+                                                showSavedNotification = true
+                                            }
+                                            
+                                            // Hide notification after 2 seconds
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                                withAnimation {
+                                                    showSavedNotification = false
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                                 
                                 ActionButton(
                                     title: "Share",
                                     icon: "square.and.arrow.up",
                                     backgroundColor: Color.black.opacity(0.4),
-                                    action:  {
-                                        showShareSheet = true
+                                    action: {
+                                        if let processedImage = model.processedImage {
+                                            // Generate the branded share image
+                                            if let brandedImage = shareModel.generateSharePreview(originalImage: processedImage) {
+                                                // Track the share event
+                                                shareModel.trackImageShared()
+                                                
+                                                // Show standard share sheet with the branded image
+                                                showShareSheet = true
+                                                
+                                                // Save the branded image for sharing
+                                                model.brandedShareImage = brandedImage
+                                            }
+                                        }
                                     }, showBorder: true)
                             }
                             
@@ -335,10 +375,38 @@ struct ResultView: View {
                 
                 Spacer()
             }
+            
+            if showSavedNotification {
+                VStack {
+                    HStack(spacing: 10) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.green)
+                            .font(.system(size: 20))
+                        
+                        Text("Saved to Photos")
+                            .font(.system(.body, design: .rounded, weight: .medium))
+                            .foregroundColor(.white)
+                    }
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 20)
+                    .background(
+                        Capsule()
+                            .fill(Color.black.opacity(0.8))
+                    )
+                    .overlay(
+                        Capsule()
+                            .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                    )
+                    .shadow(radius: 5)
+                }
+                .transition(.move(edge: .top).combined(with: .opacity))
+                .zIndex(1)
+                .position(x: UIScreen.main.bounds.width / 2, y: 100)
+            }
         }
         .sheet(isPresented: $showShareSheet) {
-            if let image = model.processedImage {
-                ShareSheet(items: [image])
+            if let brandedImage = model.brandedShareImage {
+                ShareSheet(items: [brandedImage])
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -379,6 +447,7 @@ struct ResultView: View {
         }
     }
     
+    // This function is still needed for other functionality
     private func saveImageToPhotoLibrary(_ image: UIImage) {
         UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
     }
