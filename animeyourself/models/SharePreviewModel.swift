@@ -71,11 +71,34 @@ struct SharePreviewContent: View {
             HStack {
                 // App icon with fallback
                 Group {
+                    if let _ = UIImage(named: "AppIconImage") {
                         Image("AppIconImage")
                             .resizable()
                             .frame(width: 60, height: 60)
                             .cornerRadius(12)
                             .shadow(color: Color.black.opacity(0.5), radius: 8, x: 0, y: 4)
+                    } else {
+                        // Fallback icon
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [
+                                            Color(red: 32/255, green: 212/255, blue: 177/255),
+                                            Color(red: 32/255, green: 168/255, blue: 217/255)
+                                        ]),
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .frame(width: 60, height: 60)
+                                .shadow(color: Color.black.opacity(0.5), radius: 8, x: 0, y: 4)
+                            
+                            Text("A")
+                                .font(.system(size: 30, weight: .bold, design: .rounded))
+                                .foregroundColor(.white)
+                        }
+                    }
                 }
                 
                 VStack(alignment: .leading) {
@@ -104,6 +127,10 @@ struct SharePreviewContent: View {
                 )
                 .shadow(radius: 10, x: 0, y: 5)
                 .padding(.horizontal, 20)
+                // Set a maximum width equal to the screen width minus padding
+                .frame(maxWidth: UIScreen.main.bounds.width - 40)
+                // Limit maximum height to be reasonable
+                .frame(maxHeight: UIScreen.main.bounds.width)
             
             // Watermark/Footer
             HStack {
@@ -115,7 +142,10 @@ struct SharePreviewContent: View {
             .padding(.horizontal, 20)
             .padding(.bottom, 16)
         }
-        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width * 1.5)
+        // Instead of fixed aspect ratio, use fit content size with minimum width
+        .frame(width: UIScreen.main.bounds.width)
+        // Add padding to ensure everything has proper spacing
+        .padding(.vertical, 10)
         .background(
             LinearGradient(
                 gradient: Gradient(colors: [
