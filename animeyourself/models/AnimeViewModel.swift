@@ -321,14 +321,13 @@ class AnimeViewModel: ObservableObject {
                 Plausible.shared.trackEvent(event: "anime_transform_failed", path: "/transform/error")
                 throw NSError(domain: "AnimeYourself", code: 16, userInfo: [NSLocalizedDescriptionKey: "Failed to create image from response data"])
             }
-            return image
+            return image.addWatermark(style: selectedStyle)
         } else {
             let errorMessage = String(data: data, encoding: .utf8) ?? "Unknown error"
             throw NSError(domain: "AnimeYourself", code: 17, userInfo: [NSLocalizedDescriptionKey: errorMessage])
         }
     }
     
-    // Keep the original fetch function as fallback
     private func fetchCompletedImage(requestId: String) async throws -> UIImage {
         guard let statusUrl = URL(string: "\(statusEndpointBase)\(requestId)") else {
             throw NSError(domain: "AnimeYourself", code: 14, userInfo: [NSLocalizedDescriptionKey: "Invalid status URL"])
@@ -353,7 +352,7 @@ class AnimeViewModel: ObservableObject {
                     Plausible.shared.trackEvent(event: "anime_transform_failed", path: "/transform/error")
                     throw NSError(domain: "AnimeYourself", code: 16, userInfo: [NSLocalizedDescriptionKey: "Failed to create image from response data"])
                 }
-                return image
+                return image.addWatermark(style: selectedStyle)
             } else {
                 // The response might be JSON, try to parse it to get the error message
                 let errorMessage = String(data: data, encoding: .utf8) ?? "Failed to get processed image"
@@ -363,5 +362,53 @@ class AnimeViewModel: ObservableObject {
             let errorMessage = String(data: data, encoding: .utf8) ?? "Unknown error"
             throw NSError(domain: "AnimeYourself", code: 18, userInfo: [NSLocalizedDescriptionKey: errorMessage])
         }
+    }
+}
+
+// MARK: - UIImage Watermark Extension
+extension UIImage {
+    /// Adds a watermark with the URL "juli.sh/anify" to the bottom trailing edge of the image
+    func addWatermark(style: String) -> UIImage {
+        let text = "juli.sh/anify"
+        
+        // Set up graphics context with image size
+        UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
+        defer { UIGraphicsEndImageContext() }
+        
+        // Draw the original image
+        self.draw(in: CGRect(origin: .zero, size: self.size))
+        
+        // A more eye-pleasing red color (slightly less bright)
+        let pleasingRed = UIColor(red: 0.85, green: 0.15, blue: 0.15, alpha: 1.0)
+        
+        // Configure text attributes
+        let textAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.boldSystemFont(ofSize: self.size.width * 0.05),
+            .foregroundColor: pleasingRed,
+            .strokeColor: UIColor.white,
+            .strokeWidth: -4.0
+        ]
+        
+        // Calculate text size and position (at the bottom trailing edge)
+        let textSize = text.size(withAttributes: textAttributes)
+        let textRect = CGRect(
+            x: self.size.width - textSize.width - (self.size.width * 0.03),
+            y: self.size.height - textSize.height - (self.size.height * 0.03),
+            width: textSize.width,
+            height: textSize.height
+        )
+        
+        // Draw the text
+        text.draw(in: textRect, withAttributes: textAttributes)
+        
+        // Get the resulting image
+        guard let watermarkedImage = UIGraphicsGetImageFromCurrentImageContext() else {
+            return self // Return original if watermarking fails
+        }
+        
+        // Track watermark application
+        Plausible.shared.trackEvent(event: "watermark_applied", path: "/transform/watermark", properties: ["style": style])
+        
+        return watermarkedImage
     }
 }
