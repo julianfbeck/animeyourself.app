@@ -371,6 +371,11 @@ class AnimeViewModel: ObservableObject {
 extension UIImage {
     /// Adds a watermark with the URL "juli.sh/anify" to the bottom trailing edge of the image
     func addWatermark(style: String) -> UIImage {
+        // Check if user is Pro, if so return the original image without watermark
+        if UserDefaults.standard.bool(forKey: "isPro") {
+            return self
+        }
+        
         let text = "juli.sh/anify"
         
         // Set up graphics context with image size

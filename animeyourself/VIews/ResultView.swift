@@ -177,21 +177,27 @@ struct ResultView: View {
                                 }
                             }
                             
+
+                            // Pro banner
+                            if !globalViewModel.isPro {
+                                Text("Upgrade to Remove Watermarks")
+                                    .font(.system(.footnote, design: .rounded, weight: .medium))
+                                    .foregroundColor(.yellow)
+                                    .padding(.vertical, 8)
+                            }
+
                             // Action buttons
                             HStack(spacing: 15) {
-                                ActionButton(
-                                    title: "Save",
-                                    icon: "square.and.arrow.down",
-                                    backgroundColor: Color.accentColor
-                                ) {
-                                    if let processedImage = model.processedImage {
-                                        // Generate the branded share image
-                                        if let brandedImage = shareModel.generateSharePreview(originalImage: processedImage) {
-                                            // Save the branded image to photos
-                                            UIImageWriteToSavedPhotosAlbum(brandedImage, nil, nil, nil)
-                                            
-                                            // Show saved notification and track the event
-                                            shareModel.trackImageSaved()
+                                if globalViewModel.isPro {
+                                    // Direct save button for Pro users (without branding)
+                                    ActionButton(
+                                        title: "Save Original",
+                                        icon: "square.and.arrow.down",
+                                        backgroundColor: Color.accentColor
+                                    ) {
+                                        if let processedImage = model.processedImage {
+                                            // Save the original processed image without branding
+                                            UIImageWriteToSavedPhotosAlbum(processedImage, nil, nil, nil)
                                             
                                             // Give haptic feedback
                                             let generator = UINotificationFeedbackGenerator()
@@ -210,27 +216,75 @@ struct ResultView: View {
                                             }
                                         }
                                     }
-                                }
-                                
-                                ActionButton(
-                                    title: "Share",
-                                    icon: "square.and.arrow.up",
-                                    backgroundColor: Color.black.opacity(0.4),
-                                    action: {
+                                    
+                                    // Direct share button for Pro users (without branding)
+                                    ActionButton(
+                                        title: "Share Original",
+                                        icon: "square.and.arrow.up",
+                                        backgroundColor: Color.black.opacity(0.4),
+                                        action: {
+                                            if let processedImage = model.processedImage {
+                                                // Show standard share sheet with the original image
+                                                model.brandedShareImage = processedImage
+                                                showShareSheet = true
+                                            }
+                                        }, showBorder: true)
+                                } else {
+                                    // Save button with branding for non-Pro users
+                                    ActionButton(
+                                        title: "Save",
+                                        icon: "square.and.arrow.down",
+                                        backgroundColor: Color.accentColor
+                                    ) {
                                         if let processedImage = model.processedImage {
                                             // Generate the branded share image
                                             if let brandedImage = shareModel.generateSharePreview(originalImage: processedImage) {
-                                                // Track the share event
-                                                shareModel.trackImageShared()
+                                                // Save the branded image to photos
+                                                UIImageWriteToSavedPhotosAlbum(brandedImage, nil, nil, nil)
                                                 
-                                                // Show standard share sheet with the branded image
-                                                showShareSheet = true
+                                                // Show saved notification and track the event
+                                                shareModel.trackImageSaved()
                                                 
-                                                // Save the branded image for sharing
-                                                model.brandedShareImage = brandedImage
+                                                // Give haptic feedback
+                                                let generator = UINotificationFeedbackGenerator()
+                                                generator.notificationOccurred(.success)
+                                                
+                                                // Show saved notification
+                                                withAnimation {
+                                                    showSavedNotification = true
+                                                }
+                                                
+                                                // Hide notification after 2 seconds
+                                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                                    withAnimation {
+                                                        showSavedNotification = false
+                                                    }
+                                                }
                                             }
                                         }
-                                    }, showBorder: true)
+                                    }
+                                    
+                                    // Share button with branding for non-Pro users
+                                    ActionButton(
+                                        title: "Share",
+                                        icon: "square.and.arrow.up",
+                                        backgroundColor: Color.black.opacity(0.4),
+                                        action: {
+                                            if let processedImage = model.processedImage {
+                                                // Generate the branded share image
+                                                if let brandedImage = shareModel.generateSharePreview(originalImage: processedImage) {
+                                                    // Track the share event
+                                                    shareModel.trackImageShared()
+                                                    
+                                                    // Show standard share sheet with the branded image
+                                                    showShareSheet = true
+                                                    
+                                                    // Save the branded image for sharing
+                                                    model.brandedShareImage = brandedImage
+                                                }
+                                            }
+                                        }, showBorder: true)
+                                }
                             }
                             
                             // Try another style button
