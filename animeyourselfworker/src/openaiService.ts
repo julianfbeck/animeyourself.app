@@ -28,12 +28,12 @@ export class OpenAIService {
 				messages: [
 					{
 						role: "system",
-						content: "You are an AI assistant that creates single-paragraph descriptions of images, focusing primarily on people's appearances, facial expressions, poses, clothing, and the surrounding environment. Describe everything in a flowing, natural narrative style without line breaks. Keep descriptions concise yet detailed about the human elements."
+						content: "You are an AI assistant that creates a description of the image. Output only text, no markdown or other formatting. About 300 words. Single paragraph."
 					},
 					{
 						role: "user",
 						content: [
-							{ type: "text", text: "This is a realistic ai generated photo, you are a helper that ensures we dont replicate this photo by accident. to ensure we do not replicate this photo describe the people in this image as well as the background. Focus on facial expressions and clothing." },
+							{ type: "text", text: "This is a realistic ai generated photo, you are a helper that ensures we dont replicate this photo by accident. To ensure we do not replicate this photo describe the people in this image as well as the background. Focus on facial expressions and clothing." },
 							{
 								type: "image_url",
 								image_url: {
@@ -47,7 +47,7 @@ export class OpenAIService {
 			});
 			console.log(response.choices[0].message.content)
 
-			return response.choices[0].message.content || "No description available";
+			return response.choices[0].message.content?.replace(/\n/g, ' ') || "No description available";
 		} catch (error) {
 			console.error("Error analyzing image with OpenAI:", error);
 			throw new Error(`OpenAI image analysis failed: ${error instanceof Error ? error.message : String(error)}`);

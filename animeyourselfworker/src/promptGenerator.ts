@@ -286,6 +286,6 @@ export function generatePrompt(styleID: string, context: string): string {
   }
 
   // Context is now above the prompt, followed by the prompt, then style JSON without context
-  return `${style.prompt}\n\n${context}\n\n<style>\n${style.styleJson}\n</style>`;
+  return `${context}\n\n${style.prompt}\n\n\n<style>\n${style.styleJson}\n</style>`;
 }
 
