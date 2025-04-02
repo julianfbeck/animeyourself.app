@@ -71,34 +71,11 @@ struct SharePreviewContent: View {
             HStack {
                 // App icon with fallback
                 Group {
-                    if let _ = UIImage(named: "AppIconImage") {
                         Image("AppIconImage")
                             .resizable()
                             .frame(width: 60, height: 60)
                             .cornerRadius(12)
                             .shadow(color: Color.black.opacity(0.5), radius: 8, x: 0, y: 4)
-                    } else {
-                        // Fallback icon
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(
-                                    LinearGradient(
-                                        gradient: Gradient(colors: [
-                                            Color(red: 32/255, green: 212/255, blue: 177/255),
-                                            Color(red: 32/255, green: 168/255, blue: 217/255)
-                                        ]),
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .frame(width: 60, height: 60)
-                                .shadow(color: Color.black.opacity(0.5), radius: 8, x: 0, y: 4)
-                            
-                            Text("A")
-                                .font(.system(size: 30, weight: .bold, design: .rounded))
-                                .foregroundColor(.white)
-                        }
-                    }
                 }
                 
                 VStack(alignment: .leading) {

@@ -177,21 +177,6 @@ struct ResultView: View {
                                 }
                             }
                             
-                            // Style badge
-                            Text("Your Anime Style")
-                                .font(.system(.subheadline, design: .rounded, weight: .medium))
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 8)
-                                .background(
-                                    Capsule()
-                                        .fill(.ultraThinMaterial)
-                                )
-                                .overlay(
-                                    Capsule()
-                                        .stroke(Color.white.opacity(0.3), lineWidth: 1)
-                                )
-                                .foregroundColor(.white)
-                            
                             // Action buttons
                             HStack(spacing: 15) {
                                 ActionButton(
