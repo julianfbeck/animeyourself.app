@@ -22,7 +22,7 @@ struct AnimeYourselfView: View {
     // List of anime styles matching the IDs in the AnimeViewModel
     let animeStyles = [
         "anime-default-001",
-//        "ghibli-inspired-002",
+        "ghibli-inspired-002",
 //        "cyberpunk-anime-003",
 //        "chibi-kawaii-004",
         "shonen-dynamic-005",

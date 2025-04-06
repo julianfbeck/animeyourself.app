@@ -36,7 +36,7 @@ class GlobalViewModel: ObservableObject {
     
     @Published var canUseForFree: Bool
     
-    private let maxUsageCount: Int = 1
+    private let maxUsageCount: Int = 2
     private let featureKey = "finalUsageCountforReal"
     
     // Track if this is the first launch
@@ -86,7 +86,7 @@ class GlobalViewModel: ObservableObject {
             DispatchQueue.main.async {
                 if let error = error {
                     self?.errorMessage = error.localizedDescription
-                } else if let defaultOffering = offerings?.offering(identifier: "non_trail") {
+                } else if let defaultOffering = offerings?.offering(identifier: "default") {
                     self?.offering = defaultOffering
                 }
             }

@@ -13,88 +13,83 @@ const STYLES: Record<string, StyleConfig> = {
   "anime-default-001": {
     styleID: "anime-default-001",
     name: "Anime Default",
-    prompt: "turn this into a cinematic anime style animation",
-    styleJson: `{
-  "reference": {
-    "color_composition": {
-      "palette": "Warm, earthy tones (e.g., browns, forest greens, navy, soft reds)",
-      "backgrounds": "Richly painted with a slight matte finish, vibrant but not harsh",
-      "skin_tones": "Soft, peachy, even-toned, blush only when needed",
-      "lighting": "Naturalistic with golden-hour hues and soft shadows",
-      "color_grading": "Nostalgic, cinematic feel with no harsh contrasts"
-    },
-    "line_art": {
-      "outline": "Clean, consistent, medium-thickness",
-      "style": "Slightly organic lines with subtle variation",
-      "shading": "Painted shadows and contours, minimal cross-hatching"
-    },
-    "character_design": {
-      "eyes": "Large, not exaggerated, simple reflective irises",
-      "eyebrows": "Expressive, softly shaped",
-      "mouths": "Small, softly curved",
-      "noses": "Minimal, often a line or shadow",
-      "hair": "Stylized, layered with 1-2 tone gradients, not glossy",
-      "proportions": "Realistic but stylized enough to feel animated"
-    },
-    "clothing_textures": {
-      "folds": "Minimal, soft shadows to suggest movement",
-      "materials": "Matte (cotton, wool, canvas), no shine",
-      "accessories": "Subtle, clear but simple detailing"
-    },
-    "animation_quirks": {
-      "expression": "Wind in hair, soft gestures, candid postures",
-      "moments": "Characters look mid-action or mid-sentence",
-      "emotion": "Slight blush or line detail to show warmth or embarrassment"
-    },
-    "backgrounds": {
-      "style": "Use the backgroudn provide in the context and image above to create a background that is a good fit for the image",
-    }
-  }
-}`
+    prompt: "transform this into a contemporary high-quality anime style with detailed characters. ITS IMPORTANT TO ONLY ADD CHARACTERS THAT ARE IN THE ORIGINAL IMAGE. NO COPYRIGHTED CHARACTERS!",
+    styleJson: `<prompt>
+  <style>Modern Anime</style>
+  <characters>
+    <description>Original characters with contemporary anime aesthetic</description>
+    <features>
+      <face>Angular jawlines with defined features, balance of realism and stylization</face>
+      <eyes>Large, highly detailed with multiple highlights, reflections, and color gradients</eyes>
+      <hair>Voluminous with complex coloring, shading, and individual strand detail</hair>
+      <body>Realistic proportions with slight stylization, detailed anatomy</body>
+      <skin>Smooth with subtle shading and occasional blush effects</skin>
+    </features>
+    <expressions>Dynamic and emotionally intense with exaggerated reaction potential</expressions>
+    <clothing>
+      <detail>High detail with realistic folds, textures, and material properties</detail>
+      <style>Contemporary fashion with intricate accessories and layering</style>
+      <shading>Multiple light sources with proper shadowing and material reflection</shading>
+    </clothing>
+  </characters>
+  <artStyle>
+    <technique>Digital painting with crisp linework and detailed coloring</technique>
+    <colors>Vibrant palette with high contrast and color theory application</colors>
+    <linework>Clean, varied weight lines with selective emphasis</linework>
+    <shading>Cel-shading with additional gradient work for depth</shading>
+    <effects>Selective bloom, lens flares, and particle effects</effects>
+    <composition>Dynamic camera angles and perspective</composition>
+  </artStyle>
+  <background>
+    <style>Blurred or simplified detail to focus on characters</style>
+    <lighting>Dramatic lighting with emphasis on character illumination</lighting>
+  </background>
+  <postProcessing>
+    <effects>Subtle color grading, vignetting, and atmospheric effects</effects>
+    <quality>High resolution with clean anti-aliasing</quality>
+  </postProcessing>
+  <restrictions>
+    <avoid>Adding additional Characters that are not in the original image</avoid>
+  </restrictions>
+</prompt>
+`
   },
   "ghibli-inspired-002": {
     styleID: "ghibli-inspired-002",
     name: "Studio Ghibli",
-    prompt: "turn this into a cinematic anime style animation",
-    styleJson: `{
-    "reference": {
-      "color_composition": {
-        "palette": "Soft, pastel-dominant with vibrant accents for focal points",
-        "technique": "Watercolor-inspired with visible brushstrokes and color blending",
-        "lighting": "Natural, diffused light with gentle shadows and atmospheric perspective",
-        "gradients": "Subtle sky transitions from horizon to zenith with atmospheric depth",
-        "emphasis": "Rich saturation for story-important elements against softer backgrounds"
-      },
-      "line_art": {
-        "quality": "Clean, confident linework with hand-drawn feel and varied weight",
-        "outlines": "Strong for foreground characters, fading in backgrounds, absent in distant objects",
-        "detail": "Economical approach with detailed focal points and simplified surroundings",
-        "technique": "Ink-like definition for characters with softer edges for environmental elements",
-        "consistency": "Precise linework for characters with looser, more painterly approach to backgrounds"
-      },
-      "character_design": {
-        "faces": "Simplified yet expressive features with distinctive large eyes and minimalist noses",
-        "proportions": "Realistic body ratios with slightly enlarged heads for younger characters",
-        "expressions": "Subtle eye movements and mouth shapes conveying complex emotions",
-        "hair": "Flowing, grouped strands with movement-sensitive animation and minimal individual lines",
-        "silhouettes": "Distinctive, recognizable character shapes even at distance or in shadow"
-      },
-      "clothing_textures": {
-        "folds": "Natural cloth physics with weight-appropriate draping and movement",
-        "fabrics": "Textural hints rather than detailed patterns, favoring solid colors with subtle variations",
-        "animation": "Responsive to movement, wind and character actions with believable physics",
-        "details": "Selective embellishments only where story-significant or character-defining",
-        "style": "Mix of traditional and fantastical elements with practical design considerations"
-      },
-      "animation_quirks": {
-        "movement": "Weight-appropriate physics with naturalistic timing and thoughtful pauses",
-        "effects": "Hand-painted rain, wind patterns in grass, and individually animated falling leaves",
-        "transitions": "Lingering establishing shots followed by intimate character moments",
-        "pacing": "Animated holds and micro-movements during quiet scenes, fluid action during dynamic sequences",
-        "emphasis": "Attention to small details like food steam, dust motes, and water reflections"
-      },
-    }
-  }`
+    prompt: "transform this into a hand-painted animation style similar to Studio Ghibli films. ITS IMPORTANT TO ONLY ADD CHARACTERS THAT ARE IN THE ORIGINAL IMAGE. NO COPYRIGHTED CHARACTERS!",
+    styleJson: `<prompt>
+  <style>Studio Ghibli animation</style>
+  <characters>
+    <description>Original characters with the distinctive Ghibli aesthetic</description>
+    <features>
+      <face>Rounded with simple but expressive features, soft lines</face>
+      <eyes>Large, detailed eyes with defined highlights and reflections</eyes>
+      <hair>Flowing, detailed with individual strands but not over-rendered</hair>
+      <body>Naturalistic proportions with slight stylization</body>
+      <movement>Fluid, graceful with attention to weight and physics</movement>
+    </features>
+    <expressions>Subtle, nuanced emotional range with attention to micro-expressions</expressions>
+    <clothing>Detailed fabrics with natural draping, often flowing in the wind</clothing>
+  </characters>
+  <artStyle>
+    <technique>Hand-drawn appearance with watercolor-like textures</technique>
+    <colors>Soft, natural palette with emphasis on greens, blues and earth tones</colors>
+    <linework>Delicate, varied line weight with hand-painted appearance</linework>
+    <lighting>Soft, diffused with attention to atmospheric perspective</lighting>
+    <textures>Subtle watercolor washes and painterly details</textures>
+  </artStyle>
+  <background>
+    <style>Impressionistic, painterly with attention to natural beauty</style>
+  </background>
+  <mood>
+    <feeling>Peaceful, contemplative, nostalgic</feeling>
+    <atmosphere>Sense of wonder and connection to nature</atmosphere>
+  </mood>
+  <restrictions>
+    <avoid>Adding additional Characters that are not in the original image</avoid>
+  </restrictions>
+</prompt>`
   },
   "onepiece-007": {
     styleID: "onepiece-007",

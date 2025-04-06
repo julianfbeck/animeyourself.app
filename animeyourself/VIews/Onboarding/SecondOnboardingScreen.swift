@@ -195,10 +195,6 @@ struct StyleExample: View {
                     RoundedRectangle(cornerRadius: 12)
                         .stroke(Color.white.opacity(0.3), lineWidth: 1)
                 )
-            
-            Text(name)
-                .font(.caption)
-                .foregroundColor(.white)
         }
     }
 }
